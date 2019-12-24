@@ -9,10 +9,10 @@ const festivalCollection = db.collection('festival')
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const wxContext = cloud.getWXContext()
-  const openid = wxContext.OPENID
-  const background = event.background
   try {
+    const wxContext = cloud.getWXContext()
+    const openid = wxContext.OPENID
+    const background = event.background
     if (background) {
       const now = Date.now()
       console.log('background', background)

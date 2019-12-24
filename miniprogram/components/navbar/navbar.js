@@ -17,8 +17,8 @@ Component({
     menuList: [
       { name: '日历', icon: 'icon-rili', url: '/pages/calendar/calendar' },
       { name: '倒计时', icon: 'icon-loudou', url: '/pages/countdown/countdown' },
-      { name: '节日', icon: 'icon-user', url: '/pages/user/user' },
-      { name: '我的', icon: 'icon-user', url: '/pages/user/user' }
+      // { name: '节日', icon: 'icon-user', url: '/pages/user/user' },
+      // { name: '我的', icon: 'icon-user', url: '/pages/user/user' }
     ]
   },
 

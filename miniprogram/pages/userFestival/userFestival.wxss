@@ -29,5 +29,6 @@
   color: rgba(61, 175, 252, 0.87);
 }
 .addbtn {
+  width: 90% !important;
   margin-bottom: 20rpx;
 }

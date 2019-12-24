@@ -8,50 +8,68 @@ const festivalCollection = db.collection('festival')
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  
-  if (!event.one) { //  日历
-    let { month, lunarMonth } = event
-    let conditionArr = [], conditionLunarArr = []
-    month.forEach(item => {
-      conditionArr.push({
-        month: Number(item.split('-')[1]),
-        lunar: false
-      })
-    })
-    lunarMonth.forEach(item => {
-      conditionLunarArr.push({
-        month: Number(item.split('-')[1]),
-        lunar: true
-      })
-    })
-    let festivalResult = await festivalCollection.where(_.or(conditionArr)).get()
-    let lunarFestivalResult = await festivalCollection.where(_.or(conditionLunarArr)).get()
-    let festival = {}, lunarFestival = {}
-    festivalResult.data.forEach(item => {
-      festival[item.month + '-' + item.day] = item;
-    })
-    lunarFestivalResult.data.forEach(item => {
-      lunarFestival[item.month + '-' + item.day] = item;
-    })
-    return {
-      festival,
-      lunarFestival
+  if (event.user) {
+    try {
+      const wxContext = cloud.getWXContext()
+      const openid = wxContext.OPENID
+      let festivalResult = await festivalCollection.where({
+        user: openid
+      }).get()
+      return festivalResult.data
+    } catch(e) {
+      return { status: 0, message: '请先登录' }
     }
-  } else { // 倒计时
-    let { sun, lunar } = event
-    let result = await festivalCollection.where(_.or([
-      {
-        month: sun.month,
-        day: sun.day,
-        lunar: false
-      },
-      {
-        month: lunar.month,
-        day: lunar.day,
-        lunar: true
+  } else {
+    if (!event.one) { //  日历
+      let { month, lunarMonth } = event
+      let conditionArr = [], conditionLunarArr = []
+      month.forEach(item => {
+        conditionArr.push({
+          month: Number(item.split('-')[1]),
+          lunar: false
+        })
+      })
+      lunarMonth.forEach(item => {
+        conditionLunarArr.push({
+          month: Number(item.split('-')[1]),
+          lunar: true
+        })
+      })
+      let festivalResult = await festivalCollection.where(_.or(conditionArr)).get()
+      let lunarFestivalResult = await festivalCollection.where(_.or(conditionLunarArr)).get()
+      let festival = {}, lunarFestival = {}
+      festivalResult.data.forEach(item => {
+        festival[item.month + '-' + item.day] = item;
+      })
+      lunarFestivalResult.data.forEach(item => {
+        lunarFestival[item.month + '-' + item.day] = item;
+      })
+      return {
+        festival,
+        lunarFestival
       }
-    ])).get()
-    let data = result.data[result.data.length - 1] || {}
-    return data
+    } else { // 倒计时
+      let { sun, lunar, id } = event
+      if (id) {
+        let result = await festivalCollection.where({
+          _id: id
+        }).get()
+        return result.data[0] || {}
+      }
+      let result = await festivalCollection.where(_.or([
+        {
+          month: sun.month,
+          day: sun.day,
+          lunar: false
+        },
+        {
+          month: lunar.month,
+          day: lunar.day,
+          lunar: true
+        }
+      ])).get()
+      let data = result.data[result.data.length - 1] || {}
+      return data
+    }
   }
 }

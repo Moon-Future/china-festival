@@ -5,98 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    festivals: [
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      },
-      {
-        festival: '婚礼',
-        year: 2020,
-        month: 1,
-        day: 1,
-        remark: '欢迎大家哦',
-        bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
-        background: '',
-        color: ''
-      }
-    ],
+    festivals: [],
     bgDefault: 'default.jpg',
     colorDefault: '#fff',
   },
@@ -105,7 +14,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    
   },
 
   /**
@@ -119,7 +28,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.getUserFestival()
   },
 
   /**
@@ -157,6 +66,28 @@ Page({
 
   },
 
+  getUserFestival: function() {
+    wx.showLoading()
+    let self = this
+    wx.cloud.callFunction({
+      name: 'getFestival',
+      data: {user: true}
+    }).then(res => {
+      wx.hideLoading()
+      if (res.result.status === 0) {
+        wx.showToast({
+          title: res.result.message,
+        })
+        return
+      }
+      self.setData({
+        festivals: res.result
+      })
+    }).catch(err => {
+
+    })
+  },
+
   addFestival: function(e) {
     let index = e.currentTarget.dataset.index
     console.log('0', index)
@@ -164,7 +95,10 @@ Page({
 
   goCountdown: function(e) {
     let index = e.currentTarget.dataset.index
-    console.log('1', index)
+    let data = this.data.festivals[index]
+    wx.navigateTo({
+      url: '/pages/countdown/countdown?year=' + data.year + '&month=' + data.month + '&day=' + data.day + '&id=' + data._id
+    });
   },
 
   goAdd: function() {

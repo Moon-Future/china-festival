@@ -218,10 +218,8 @@ Page({
       date: data.date,
       remark: data.remark,
       color: data.colors[data.colorActive],
-      background: data.bgsrc,
-      openid: app.globalData.userInfo.openid
+      background: data.bgsrc
     }
-    console.log(subData)
     wx.cloud.callFunction({
       name: 'addFestival',
       data: subData

@@ -46,13 +46,18 @@ Page({
    */
   onLoad: function (options) {
     const self = this;
-    let { year = 2020, month = 1, day = 1 } = options;
+    if (!options.year) {
+      options = {year: 2020, month: 1, day: 1}
+    }
+    let { year, month, day, id } = options;
     this.setData({
       'textMap.yearNum.text': year,
       'textMap.monthNum.text': month,
       'textMap.dayNum.text': day,
-      query: wx.createSelectorQuery()
+      query: wx.createSelectorQuery(),
+      id,
     })
+    this.getFestival(year, month, day);
     wx.loadFontFace({
       family: 'QcKaiTi',
       source: 'url("https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf")',
@@ -75,15 +80,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    let textMap = this.data.textMap;
-    this.getFestival(textMap.yearNum.text, textMap.monthNum.text, textMap.dayNum.text);
+    
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    clearInterval(this.data.timer);
+    
   },
 
   /**
@@ -166,7 +170,8 @@ Page({
       data: {
         sun: { month: Number(m), day: Number(d) },
         lunar: { month: dateInfo.lMonth, day: dateInfo.lDay },
-        one: true
+        one: true,
+        id: self.data.id
       }
     }).then(res => {
       let result = res.result;
