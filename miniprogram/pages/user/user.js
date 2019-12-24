@@ -17,20 +17,23 @@ Page({
     wx.getSetting({
       success: async function (res) {
         if (res.authSetting['scope.userInfo']) {
-          let info = await self.getUserInfo()
-          let { userInfo } = info
-          wx.cloud.callFunction({
-            name: 'getUserInfo',
-            data: {}
-          }).then(res => {
-            userInfo.openid = res.result.openid
-            self.setData({
-              userInfo
-            })
-            app.globalData.userInfo = userInfo
-          }).catch(err => {
-
+          self.setData({
+            userInfo: app.globalData.userInfo
           })
+          // let info = await self.getUserInfo()
+          // let { userInfo } = info
+          // wx.cloud.callFunction({
+          //   name: 'getUserInfo',
+          //   data: {}
+          // }).then(res => {
+          //   userInfo.openid = res.result.openid
+          //   self.setData({
+          //     userInfo
+          //   })
+          //   app.globalData.userInfo = userInfo
+          // }).catch(err => {
+
+          // })
         }
       }
     })

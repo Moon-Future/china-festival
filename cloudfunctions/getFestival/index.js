@@ -8,13 +8,20 @@ const festivalCollection = db.collection('festival')
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  if (event.user) {
+  if (event.user || event.id) {
     try {
-      const wxContext = cloud.getWXContext()
-      const openid = wxContext.OPENID
-      let festivalResult = await festivalCollection.where({
-        user: openid
-      }).get()
+      let festivalResult
+      if (event.user) {
+        const wxContext = cloud.getWXContext()
+        const openid = wxContext.OPENID
+        festivalResult = await festivalCollection.where({
+          user: openid
+        }).get()
+      } else {
+        festivalResult = await festivalCollection.where({
+          _id: event.id
+        }).get()
+      }
       return festivalResult.data
     } catch(e) {
       return { status: 0, message: '请先登录' }

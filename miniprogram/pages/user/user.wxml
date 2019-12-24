@@ -1,11 +1,10 @@
 <view class="user-wrapper">
   <view class="user-info" style="background-image:url(../../images/userbg.jpg)">
     <image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
-    <text class="user-name">陈亮</text>
+    <text class="user-name">{{userInfo.nickName}}</text>
   </view>
   <navigator class="user-item" url="/pages/userFestival/userFestival">
     <text>我的节日</text>
   </navigator>
-  <button open-type="getUserInfo">授权登录</button>
   <navbar activeIndex="3"></navbar>
 </view>

@@ -1,5 +1,8 @@
 // components/month/month.js
 const calendar = require('../../js/calendar.js');
+const app = getApp()
+let startX = 0
+let startY = 0
 Component({
   /**
    * 组件的属性列表
@@ -123,6 +126,11 @@ Component({
     selectDay(e) {
       let info = e.currentTarget.dataset.info;
       let days = this.data.days;
+      app.globalData.date = {
+        year: info.year,
+        month: info.month,
+        day: info.day
+      }
       if (info.year !== this.data.year || info.month !== this.data.month) {
         this.initCalendar(info.year, info.month, info.day);
       } else {
@@ -205,6 +213,11 @@ Component({
           duration: 100
         })
       })
+      app.globalData.date = {
+        year: this.data.year,
+        month: this.data.month,
+        day: this.data.day
+      }
     },
     bindDateChange(e) {
       let [year, month, day] = e.detail.value.split('-');
@@ -228,13 +241,50 @@ Component({
         detail: {
           value: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
         }
-      });
+      })
     },
     gotoCountdown() {
       let data = this.data;
       wx.navigateTo({
         url: '/pages/countdown/countdown?year=' + data.year + '&month=' + data.month + '&day=' + data.day
       });
+    },
+    touchStart(e) {
+      startX = e.touches[0].pageX
+      startY = e.touches[0].pageY
+    },
+    touchEnd(e) {
+      let endX = e.changedTouches[0].pageX
+      let endY = e.changedTouches[0].pageY
+      let diffx = endX - startX
+      let { year, month, day } = this.data
+      if (diffx > 50 && Math.abs(startY - endY) < 50) {
+        if (month == 1) {
+          month = 12
+          year -= 1
+        } else {
+          month -= 1
+        }
+        day = 1
+        this.bindDateChange({
+          detail: {
+            value: year + '-' + month + '-' + day
+          }
+        });
+      } else if (diffx < -50 && Math.abs(endY - startY) < 50) {
+        if (month == 12) {
+          month = 1
+          year += 1
+        } else {
+          month += 1
+        }
+        day = 1
+        this.bindDateChange({
+          detail: {
+            value: year + '-' + month + '-' + day
+          }
+        });
+      }
     }
   }
 })

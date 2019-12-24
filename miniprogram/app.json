@@ -1,7 +1,10 @@
 {
   "pages": [
     "pages/calendar/calendar",
-    "pages/countdown/countdown"
+    "pages/countdown/countdown",
+    "pages/user/user",
+    "pages/userFestival/userFestival",
+    "pages/addFestival/addFestival"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

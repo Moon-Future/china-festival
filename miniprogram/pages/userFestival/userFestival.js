@@ -41,8 +41,8 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
-
+  onUnload: function (options) {
+    
   },
 
   /**
@@ -88,9 +88,12 @@ Page({
     })
   },
 
-  addFestival: function(e) {
+  updFestival: function(e) {
     let index = e.currentTarget.dataset.index
-    console.log('0', index)
+    let data = this.data.festivals[index]
+    wx.navigateTo({
+      url: '/pages/addFestival/addFestival?id=' + data._id
+    });
   },
 
   goCountdown: function(e) {

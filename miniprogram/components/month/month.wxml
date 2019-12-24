@@ -25,16 +25,18 @@
       </view>
     </view>
   </view>
-  <view class="week">
-    <text class="week-item" wx:for="{{weeks}}" wx:key="index">
-      {{item}}
-    </text>
-  </view>
-  <view class="day">
-    <view class="day-row" wx:for="{{days}}" wx:key="index" wx:for-item="arr">
-      <view class="day-col {{item.prev || item.next ? 'other-month' : ''}} {{item.active ? 'day-col-active' : ''}}" wx:for="{{arr}}" wx:key="index" bindtap="selectDay" data-info="{{item}}">
-        <text class="day-col-num">{{item.day}}</text>
-        <text class="day-col-lunar {{(item.festival || item.lunarFestival) && !item.prev && !item.next ? 'day-col-festival' : ''}} {{item.active ? 'day-col-active' : ''}}">{{item.festival || item.lunarFestival || item.lunar}}</text>
+  <view bindtouchstart="touchStart" bindtouchend="touchEnd">
+    <view class="week">
+      <text class="week-item" wx:for="{{weeks}}" wx:key="index">
+        {{item}}
+      </text>
+    </view>
+    <view class="day">
+      <view class="day-row" wx:for="{{days}}" wx:key="index" wx:for-item="arr">
+        <view class="day-col {{item.prev || item.next ? 'other-month' : ''}} {{item.active ? 'day-col-active' : ''}}" wx:for="{{arr}}" wx:key="index" bindtap="selectDay" data-info="{{item}}">
+          <text class="day-col-num">{{item.day}}</text>
+          <text class="day-col-lunar {{(item.festival || item.lunarFestival) && !item.prev && !item.next ? 'day-col-festival' : ''}} {{item.active ? 'day-col-active' : ''}}">{{item.festival || item.lunarFestival || item.lunar}}</text>
+        </view>
       </view>
     </view>
   </view>

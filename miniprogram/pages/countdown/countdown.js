@@ -1,5 +1,7 @@
 // miniprogram/pages/countdown/countdown.js
 const calendar = require('../../js/calendar.js')
+const app = getApp()
+let timer = null
 Page({
 
   /**
@@ -47,7 +49,7 @@ Page({
   onLoad: function (options) {
     const self = this;
     if (!options.year) {
-      options = {year: 2020, month: 1, day: 1}
+      options = app.globalData.date || {year: 2020, month: 1, day: 1}
     }
     let { year, month, day, id } = options;
     this.setData({
@@ -58,15 +60,15 @@ Page({
       id,
     })
     this.getFestival(year, month, day);
-    wx.loadFontFace({
-      family: 'QcKaiTi',
-      source: 'url("https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf")',
-      success: function() {
-        self.setData({
-          loading: false
-        })
-      }
-    })
+    // wx.loadFontFace({
+    //   family: 'QcKaiTi',
+    //   source: 'url("https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf")',
+    //   success: function() {
+    //     self.setData({
+    //       loading: false
+    //     })
+    //   }
+    // })
   },
 
   /**
@@ -94,7 +96,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    clearInterval(this.data.timer);
+    clearInterval(timer);
   },
 
   /**
@@ -120,7 +122,7 @@ Page({
 
   countdown: function() {
     const self = this;
-    clearInterval(this.data.timer);
+    clearInterval(timer);
     let oneSec = 1000,
       oneMins = 60 * oneSec,
       oneHour = 60 * oneMins,
@@ -133,7 +135,7 @@ Page({
       past: Date.now() - dateStamp > 0 ? true : false,
       today: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
     });
-    let timer = setInterval(function () {
+    timer = setInterval(function () {
       let now = Date.now(),
         diff = Math.abs(dateStamp - now),
         day = Math.floor(diff / oneDay),
@@ -151,9 +153,6 @@ Page({
         'textMap.restSecNum.text': sec
       });
     }, 1000);
-    this.setData({
-      timer
-    });
   },
 
   getFestival: function (y, m, d) {

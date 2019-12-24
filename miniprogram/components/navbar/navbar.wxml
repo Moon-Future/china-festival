@@ -1,6 +1,10 @@
 <view class="navbar-wrapper">
-  <navigator url="{{item.url}}" hover-class="none" class="navbar-item {{activeIndex === index ? 'active' : ''}}" wx:for="{{menuList}}" wx:key="index">
+  <!-- <navigator url="{{item.url}}" hover-class="none" class="navbar-item {{activeIndex === index ? 'active' : ''}}" wx:for="{{menuList}}" wx:key="index">
     <text class="iconfont {{item.icon}}"></text>
     <text class="name">{{item.name}}</text>
-  </navigator>
+  </navigator> -->
+  <button open-type="{{item.userInfo ? 'getUserInfo' : ''}}" bindgetuserinfo="getUserInfo" class="navbar-item {{activeIndex === index ? 'active' : ''}}" wx:for="{{menuList}}" wx:key="index" data-index="{{index}}" bindtap="navigateTo">
+    <text class="iconfont {{item.icon}}"></text>
+    <text class="name">{{item.name}}</text>
+  </button>
 </view>

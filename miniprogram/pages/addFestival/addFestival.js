@@ -20,6 +20,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options)
     const systemInfo = wx.getSystemInfoSync()
     const width = systemInfo.windowWidth * 0.95
     const height = systemInfo.windowHeight - this.rpxToPx(220)
@@ -27,6 +28,9 @@ Page({
       width,
       height
     })
+    if (options.id) {
+      this.getFestival(options.id)
+    }
   },
 
   /**
@@ -76,6 +80,35 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  getFestival: function(id) {
+    let self = this
+    wx.showLoading()
+    wx.cloud.callFunction({
+      name: 'getFestival',
+      data: { id }
+    }).then(res => {
+      wx.hideLoading()
+      if (res.result.status == 0) {
+        wx.showToast({
+          title: res.result.message,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      let data = res.result[0]
+      self.setData({
+        festival: data.festival,
+        date: `${data.year}-${data.month}-${data.day}`,
+        remark: data.remark || '',
+        bgsrc: data.background[0],
+        colorActive: self.data.colors.indexOf(data.color),
+      })
+    }).catch(err => {
+      wx.hideLoading()
+    })
   },
 
   formInput: function(e) {
@@ -213,6 +246,9 @@ Page({
 
   submit: function() {
     let data = this.data
+    if (!data.submit) {
+      return
+    }
     let subData = {
       festival: data.festival,
       date: data.date,
@@ -229,6 +265,7 @@ Page({
           title: res.result.message,
           duration: 2000
         })
+        wx.navigateBack()
       } else {
         wx.showToast({
           title: res.result.message,

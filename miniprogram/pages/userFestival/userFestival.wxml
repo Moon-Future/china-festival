@@ -1,6 +1,6 @@
 <view>
   <view class="userfestival-list">
-    <view class="userfestival-item" wx:for="{{festivals}}" wx:key="index" data-index="{{index}}" bindtap="addFestival">
+    <view class="userfestival-item" wx:for="{{festivals}}" wx:key="index" data-index="{{index}}" bindtap="updFestival">
       <view>
         <view class="userfestival-time">
           <text class="iconfont icon-memory"></text>

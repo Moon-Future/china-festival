@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
     if (background) {
       const now = Date.now()
       console.log('background', background)
-      const uploadResult = await cosUpload(`${openid}-${now}.jpg`, background)
+      const uploadResult = await cosUpload(`${openid}-${now}.jpg`, bg)
       background = `${openid}-${now}.jpg`
       console.log('uploadResult', uploadResult)
       if (uploadResult.statusCode !== 200) {
@@ -35,6 +35,7 @@ exports.main = async (event, context) => {
         lunar: false,
         background: [background],
         color: event.color,
+        remark: event.remark,
         user: openid
       }
     })
