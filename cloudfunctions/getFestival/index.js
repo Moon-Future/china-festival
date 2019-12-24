@@ -1,0 +1,57 @@
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+
+cloud.init()
+const db = cloud.database()
+const _ = db.command
+const festivalCollection = db.collection('festival')
+
+// 云函数入口函数
+exports.main = async (event, context) => {
+  
+  if (!event.one) { //  日历
+    let { month, lunarMonth } = event
+    let conditionArr = [], conditionLunarArr = []
+    month.forEach(item => {
+      conditionArr.push({
+        month: Number(item.split('-')[1]),
+        lunar: false
+      })
+    })
+    lunarMonth.forEach(item => {
+      conditionLunarArr.push({
+        month: Number(item.split('-')[1]),
+        lunar: true
+      })
+    })
+    let festivalResult = await festivalCollection.where(_.or(conditionArr)).get()
+    let lunarFestivalResult = await festivalCollection.where(_.or(conditionLunarArr)).get()
+    let festival = {}, lunarFestival = {}
+    festivalResult.data.forEach(item => {
+      festival[item.month + '-' + item.day] = item;
+    })
+    lunarFestivalResult.data.forEach(item => {
+      lunarFestival[item.month + '-' + item.day] = item;
+    })
+    return {
+      festival,
+      lunarFestival
+    }
+  } else { // 倒计时
+    let { sun, lunar } = event
+    let result = await festivalCollection.where(_.or([
+      {
+        month: sun.month,
+        day: sun.day,
+        lunar: false
+      },
+      {
+        month: lunar.month,
+        day: lunar.day,
+        lunar: true
+      }
+    ])).get()
+    let data = result.data[result.data.length - 1] || {}
+    return data
+  }
+}

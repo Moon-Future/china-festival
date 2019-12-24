@@ -1,0 +1,102 @@
+@font-face {
+  font-family: 'Number';
+  src: url('https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/number-01.ttf');
+}
+
+/* @font-face {
+  font-family: 'QcKaiTi';
+  src: url('https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf');
+} */
+
+.canvas-wrapper {
+  position: fixed;
+  left: 1000px;
+}
+
+.time-wrapper {
+  width: 90%;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.icon-share {
+  font-size: 80rpx;
+  color: #e04dff;
+}
+.countdown-card {
+  width: 95%;
+  margin: auto;
+  /* border: 1px solid; */
+  border-radius: 10px;
+  position: fixed;
+  top: 100rpx;
+  bottom: 120rpx;
+  left: 0;
+  right: 0;
+  font-family: QcKaiTi;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+.date-wrapper {
+  display: flex;
+  justify-content: center;
+  font-size: 40rpx;
+}
+.str {
+  margin: auto 0;
+}
+.sun-date {
+  font-size: 60rpx;
+  margin-left: 20rpx;
+}
+.lunar {
+  text-align: center;
+  font-size: 50rpx;
+  padding: 20rpx 0;
+}
+.festival-wrapper {
+  margin: 50rpx 0;
+  text-align: center;
+  font-size: 120rpx;
+  /* color: #fff; */
+  height: 200rpx;
+  line-height: 200rpx;
+}
+.festival-img {
+  height: 64px;
+}
+.past-str {
+  text-align: center;
+  padding: 30rpx 0;
+}
+.countdown {
+  display: flex;
+  justify-content: space-around;
+  font-size: 50rpx;
+}
+.countdown-item {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  font-size: 90rpx;
+  width: 25%;
+}
+.countdown-time {
+  margin-top: 10rpx;
+  font-size: 36rpx;
+  display: block;
+}
+.number {
+  font-family: Number;
+}

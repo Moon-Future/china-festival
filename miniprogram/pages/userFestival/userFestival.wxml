@@ -1,0 +1,18 @@
+<view>
+  <view class="userfestival-list">
+    <view class="userfestival-item" wx:for="{{festivals}}" wx:key="index" data-index="{{index}}" bindtap="addFestival">
+      <view>
+        <view class="userfestival-time">
+          <text class="iconfont icon-memory"></text>
+          <view class="userfestival-info">
+            <text class="userfestival-name">{{item.festival}}</text>
+            <text class="userfestival-date">{{item.year}}.{{item.month}}.{{item.day}}</text>
+          </view>
+        </view>
+        <text class="userfestival-remark">{{item.remark}}</text>
+      </view>
+      <text class="iconfont icon-loudou" data-index="{{index}}" catch:tap="goCountdown"></text>
+    </view>
+  </view>
+  <button type="primary" size="default" class="addbtn" bindtap="goAdd">添加纪念日</button>
+</view>

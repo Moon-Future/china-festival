@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "month": "/components/month/month",
+    "navbar": "/components/navbar/navbar"
+  }
+}

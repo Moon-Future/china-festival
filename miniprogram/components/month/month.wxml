@@ -1,0 +1,41 @@
+<!--components/month/month.wxml-->
+<view class="date-wrapper">
+  <view class="year-month">
+    <picker class="picker-wrapper" mode="date" value="{{date}}" start="1900-1-1" end="2100-12-31" bindchange="bindDateChange">
+       <text class="time">{{year}}年{{month}}月</text>
+       <text class="iconfont icon-arrowdown"></text>
+    </picker>
+    <view class="date">
+      <view class="date-time">
+        <text class="date-day">{{day}}</text>
+        <view class="date-week">
+          <text>星期{{weeks[week]}}</text>
+          <text>{{dateInfo.IMonthCn}}{{dateInfo.IDayCn}}</text>
+          <text>{{festival}}</text>
+        </view>
+      </view>
+      <view class="animal">
+        <!-- <text>{{dateInfo.Animal}}</text> -->
+        <image wx:if="{{dateInfo.Animal}}" class="animal-img" src="../../images/{{animalsImg[dateInfo.Animal]}}.png"></image>
+      </view>
+      <view class="date-now">
+        <text class="data-now-text" bindtap="backToday">{{now ? '今' : '☺'}}</text>
+        <text class="iconfont icon-loudou" bindtap="gotoCountdown"></text>
+        <text class="iconfont icon-memory"></text>
+      </view>
+    </view>
+  </view>
+  <view class="week">
+    <text class="week-item" wx:for="{{weeks}}" wx:key="index">
+      {{item}}
+    </text>
+  </view>
+  <view class="day">
+    <view class="day-row" wx:for="{{days}}" wx:key="index" wx:for-item="arr">
+      <view class="day-col {{item.prev || item.next ? 'other-month' : ''}} {{item.active ? 'day-col-active' : ''}}" wx:for="{{arr}}" wx:key="index" bindtap="selectDay" data-info="{{item}}">
+        <text class="day-col-num">{{item.day}}</text>
+        <text class="day-col-lunar {{(item.festival || item.lunarFestival) && !item.prev && !item.next ? 'day-col-festival' : ''}} {{item.active ? 'day-col-active' : ''}}">{{item.festival || item.lunarFestival || item.lunar}}</text>
+      </view>
+    </view>
+  </view>
+</view>

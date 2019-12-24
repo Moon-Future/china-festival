@@ -1,0 +1,75 @@
+<!-- <canvas canvas-id="draw-img" style="width:{{canvasW}}px;height:{{canvasH}}px"></canvas> -->
+<view class="canvas-wrapper">
+  <painter palette="{{canvasData}}" bind:imgOK="onImgOK"></painter>
+</view>
+<view class="countdown-wrapper">
+  <view class="time-wrapper">
+    <view>
+      <text>今日 </text>
+      <text>{{today}}</text>
+    </view>
+    <view>
+      <text class="iconfont icon-share" bindtap="share"></text>
+    </view>
+    <picker class="picker-wrapper" mode="date" value="{{pickerDate}}" start="1900-1-1" end="2100-12-31" bindchange="bindDateChange">
+       <text>{{textMap.yearNum.text}} 年 {{textMap.monthNum.text}} 月 {{textMap.dayNum.text}}日</text>
+    </picker>
+  </view>
+  <view class="countdown-card {{sadday ? 'moai' : ''}}" style="background-image:url({{background}});color:{{color}}">
+    <view class="date-wrapper">
+      <text class="str canvas-item" hidden="{{past}}" data-key="str1">{{textMap.str1.text}}</text>
+      <view class="sun-date">
+        <text class="number canvas-item" data-key="yearNum" data-num="true">{{textMap.yearNum.text}}</text>
+        <text class="canvas-item" data-key="year">{{textMap.year.text}}</text>
+        <text class="number canvas-item" data-key="monthNum" data-num="true">{{textMap.monthNum.text}}</text>
+        <text class="canvas-item" data-key="month">{{textMap.month.text}}</text>
+        <text class="number canvas-item" data-key="dayNum" data-num="true">{{textMap.dayNum.text}}</text>
+        <text class="canvas-item" data-key="day">{{textMap.day.text}}</text>
+      </view>
+    </view>
+    <view class="lunar">
+      <text class="lunar-date canvas-item" data-key="lunar">{{textMap.lunar.text}}</text>
+    </view>
+    <view class="festival-wrapper" hidden="{{date.festival === ''}}">
+      <text class="canvas-item" data-key="festival" data-size="120">{{textMap.festival.text}}</text>
+    </view>
+    <view class="past-str">
+      <text class="canvas-item" data-key="{{past ? 'str3' : 'str2'}}">{{past ? textMap.str3.text : textMap.str2.text}}</text>
+    </view>
+    <view class="countdown">
+      <view class="countdown-item">
+        <view class="{{numberFlag ? 'number' : ''}}">
+          <text class="canvas-item" data-key="restDayNum" data-num="true">{{textMap.restDayNum.text}}</text>
+        </view>
+        <view class="countdown-time">
+          <text class="canvas-item" data-key="restDay">{{textMap.restDay.text}}</text>
+        </view>
+      </view>
+      <view class="countdown-item">
+        <view class="{{numberFlag ? 'number' : ''}}">
+          <text class="canvas-item" data-key="restHourNum" data-num="true">{{textMap.restHourNum.text}}</text>
+        </view>
+        <view class="countdown-time">
+          <text class=" canvas-item" data-key="restHour">{{textMap.restHour.text}}</text>
+        </view>
+      </view>
+      <view class="countdown-item">
+        <view class="{{numberFlag ? 'number' : ''}}">
+          <text class="canvas-item" data-key="restMinsNum" data-num="true">{{textMap.restMinsNum.text}}</text>
+        </view>
+        <view class="countdown-time">
+          <text class="canvas-item" data-key="restMins">{{textMap.restMins.text}}</text>
+        </view>
+      </view>
+      <view class="countdown-item">
+        <view class="{{numberFlag ? 'number' : ''}}">
+          <text class="canvas-item" data-key="restSecNum" data-num="true">{{textMap.restSecNum.text}}</text>
+        </view>
+        <view class="countdown-time">
+          <text class="canvas-item" data-key="restSec">{{textMap.restSec.text}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <navbar activeIndex="1"></navbar>
+</view>

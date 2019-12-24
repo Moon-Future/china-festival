@@ -1,0 +1,27 @@
+@import "/style/iconfont.wxss";
+.navbar-wrapper {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #ddd;
+  height: 100rpx;
+  background: #fff;
+}
+.navbar-item {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  text-align: center;
+}
+.active { 
+  color: #00adb5;
+  font-weight: bold;
+}
+.icon {
+  width: initial;
+}
+.name {
+  font-size: 30rpx;
+}

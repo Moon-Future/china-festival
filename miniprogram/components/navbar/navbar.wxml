@@ -1,0 +1,6 @@
+<view class="navbar-wrapper">
+  <navigator url="{{item.url}}" hover-class="none" class="navbar-item {{activeIndex === index ? 'active' : ''}}" wx:for="{{menuList}}" wx:key="index">
+    <text class="iconfont {{item.icon}}"></text>
+    <text class="name">{{item.name}}</text>
+  </navigator>
+</view>

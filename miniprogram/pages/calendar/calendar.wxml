@@ -1,0 +1,5 @@
+<!--miniprogram/pages/calendar/calendar.wxml-->
+<view>
+  <month></month>
+  <navbar activeIndex="0"></navbar>
+</view>

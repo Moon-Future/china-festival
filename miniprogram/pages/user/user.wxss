@@ -1,0 +1,30 @@
+.user-wrapper {
+  /* display: flex;
+  flex-flow: column; */
+  /* justify-content: flex-end; */
+}
+.user-item {
+  height: 80rpx;
+  margin-top: 20rpx;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+  background: #fff;
+}
+.user-info {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 200rpx;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin: 0 20rpx 10rpx 0;
+}

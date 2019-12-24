@@ -1,0 +1,33 @@
+.userfestival-item {
+  background: #fff;
+  width: 90%;
+  margin: 0 auto 20rpx;
+  padding: 20rpx;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.userfestival-time {
+  display: flex;
+  align-items: center;
+}
+.userfestival-info {
+  display: flex;
+  flex-flow: column;
+}
+.icon-memory {
+  color: red;
+  font-size: 80rpx;
+  margin-right: 20rpx;
+}
+.userfestival-remark {
+  font-size: 30rpx;
+}
+.icon-loudou {
+  font-size: 60rpx;
+  margin: auto 0;
+  color: rgba(61, 175, 252, 0.87);
+}
+.addbtn {
+  margin-bottom: 20rpx;
+}
