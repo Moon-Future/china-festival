@@ -177,8 +177,8 @@ Component({
           }
         }
       }
-      wx.showToast({
-        icon: 'loading'
+      wx.showLoading({
+        mask: true
       })
       wx.cloud.callFunction({
         name: 'getFestival',
@@ -187,7 +187,7 @@ Component({
           lunarMonth
         }
       }).then(res => {
-        wx.hideToast();
+        wx.hideLoading()
         let { festival, lunarFestival } = res.result;
         for (let i = 0, len = days.length; i < len; i++) {
           var arr = days[i];
@@ -207,10 +207,10 @@ Component({
           infoMap: infoMap
         });
       }).catch(err => {
-        wx.hideToast();
         wx.showToast({
           title: '网络拥堵，请稍后重试',
-          duration: 100
+          duration: 100,
+          mask: true
         })
       })
       app.globalData.date = {

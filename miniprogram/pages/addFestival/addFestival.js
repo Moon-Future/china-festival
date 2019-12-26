@@ -21,7 +21,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options)
     const systemInfo = wx.getSystemInfoSync()
     const width = systemInfo.windowWidth * 0.95
     const height = systemInfo.windowHeight - this.rpxToPx(220)
@@ -85,7 +84,9 @@ Page({
 
   getFestival: function(id) {
     let self = this
-    wx.showLoading()
+    wx.showLoading({
+      mask: true
+    })
     wx.cloud.callFunction({
       name: 'getFestival',
       data: { id }
@@ -95,7 +96,8 @@ Page({
         wx.showToast({
           title: res.result.message,
           icon: 'none',
-          duration: 2000
+          duration: 2000,
+          mask: true
         })
         return
       }
@@ -160,13 +162,20 @@ Page({
       color = data.colors[data.colorActive]
     if (data.bgsrc) {
       let canvasData = {
-        background: data.bgsrc,
+        // background: data.bgsrc,
         width: data.width + 'px',
         height: data.height + 'px',
-        views: []
+        views: [{
+          type: 'image',
+          url: data.bgsrc,
+          css: {
+            width: data.width + 'px',
+            height: data.height + 'px'
+          }
+        }]
       }
       if (!flag) {
-        canvasData.views = [{
+        canvasData.views = canvasData.views.concat([{
           type: 'text',
           text: '2019 年 12 月 25 号',
           css: {
@@ -199,7 +208,7 @@ Page({
             textAlign: 'center',
             fontSize: '60rpx'
           }
-        }]
+        }])
       }
       this.setData({
         imgShow: true,
@@ -238,7 +247,8 @@ Page({
     if (data.festival == '') {
       wx.showToast({
         title: '请填写节日名称',
-        icon: 'none'
+        icon: 'none',
+        mask: true
       })
       return
     }
@@ -263,7 +273,6 @@ Page({
     }).then(res => {
       const data = JSON.parse(res.result)
       const credentials = data.credentials
-      console.log('credentials', res)
       callback({
         TmpSecretId: credentials.tmpSecretId,
         TmpSecretKey: credentials.tmpSecretKey,
@@ -275,24 +284,50 @@ Page({
     })
   },
 
-  uploadFile: function (fileName, filepath) {
+  uploadFile: function (fileName, filepath, callback) {
     const cos = new COS({
       getAuthorization: this.getAuthorization
     })
     cos.postObject({
-      Bucket: 'china-festival-1255423800',
-      Region: 'ap-chengdu',
+      Bucket: 'chinafestival-1255423800',
+      Region: 'ap-guangzhou',
       Key: fileName,  //上传COS 的路径 和 文件唯一名
       FilePath: filepath,
       onProgress: function (info) {  //进度的回调函数（进度条）
-        console.log(JSON.stringify(info));
+        // console.log(JSON.stringify(info));
       }
     }, function(err, data) {
-      console.log(err, data)
+      callback(err, data)
+    })
+  },
+
+  submitData: function(data) {
+    wx.cloud.callFunction({
+      name: 'addFestival',
+      data: data
+    }).then(res => {
+      if (res.result.status == 1) {
+        wx.showToast({
+          title: res.result.message,
+          duration: 2000,
+          mask: true
+        })
+        wx.navigateBack()
+      } else {
+        wx.showToast({
+          title: res.result.message,
+          icon: 'none',
+          duration: 2000,
+          mask: true
+        })
+      }
+    }).catch(err => {
+
     })
   },
 
   submit: function() {
+    let self = this
     let data = this.data
     if (!data.submit) {
       return
@@ -302,31 +337,30 @@ Page({
       date: data.date,
       remark: data.remark,
       color: data.colors[data.colorActive],
-      background: data.bgsrc
+      background: ''
     }
-    if (data.bgsrc) {
-      this.uploadFile('test-1.jpg', data.bgsrc)
-    }
-    return
-    wx.cloud.callFunction({
-      name: 'addFestival',
-      data: subData
-    }).then(res => {
-      if (res.result.status == 1) {
-        wx.showToast({
-          title: res.result.message,
-          duration: 2000
-        })
-        wx.navigateBack()
-      } else {
-        wx.showToast({
-          title: res.result.message,
-          icon: 'none',
-          duration: 2000
-        })
-      }
-    }).catch(err => {
-
+    wx.showLoading({
+      title: '正在上传',
+      mask: true
     })
+    if (data.bgsrc) {
+      let fileName = `countdown/${app.globalData.userInfo.openid}_${Date.now()}.jpg`
+      this.uploadFile(fileName, data.bgsrc, function(err, data) {
+        if (err) {
+          wx.showToast({
+            title: '图片上传失败，请重试',
+            icon: 'none',
+            duration: 2000,
+            mask: true
+          })
+        } else {
+          subData.background = fileName
+          self.submitData(subData)
+        }
+      })
+    } else {
+      this.submitData(subData)
+    }
+    
   }
 })

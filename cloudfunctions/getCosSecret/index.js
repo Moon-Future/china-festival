@@ -12,13 +12,10 @@ var config = {
   durationSeconds: 1800,
   bucket: tencentSecret.Bucket,
   region: tencentSecret.Region,
-  allowPrefix: 'countdown/*',
+  allowPrefix: '*',
   // 简单上传和分片，需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/14048
   allowActions: [
-    'name/cos:PutObject',
-    'name/cos:PostObject',
-
-    'name/cos:*',
+    'name/cos:PostObject'
   ],
 };
 
@@ -40,8 +37,9 @@ function getCosSecret(resolve, reject) {
 
   // 获取临时密钥
   var LongBucketName = config.bucket;
-  var ShortBucketName = LongBucketName.split('-')[0] + '-' + LongBucketName.split('-')[1];
-  var AppId = LongBucketName.split('-')[2];
+  var ShortBucketName = LongBucketName.substr(0, LongBucketName.lastIndexOf('-'));
+  var AppId = LongBucketName.substr(1 + LongBucketName.lastIndexOf('-'));
+  console.log('xxx', ShortBucketName, AppId, config)
   var policy = {
     'version': '2.0',
     'statement': [{

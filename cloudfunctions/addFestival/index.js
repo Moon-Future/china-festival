@@ -11,20 +11,6 @@ exports.main = async (event, context) => {
   try {
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
-    const background = event.background
-    if (background) {
-      const now = Date.now()
-      console.log('background', background)
-      const uploadResult = await cosUpload(`${openid}-${now}.jpg`, background)
-      background = `${openid}-${now}.jpg`
-      console.log('uploadResult', uploadResult)
-      if (uploadResult.statusCode !== 200) {
-        return {
-          status: 0,
-          message: '上传失败'
-        }
-      }
-    }
     const result = await festivalCollection.add({
       data: {
         festival: event.festival,
@@ -32,7 +18,7 @@ exports.main = async (event, context) => {
         month: event.date.split('-')[1],
         day: event.date.split('-')[2],
         lunar: false,
-        background: [background],
+        background: [event.background],
         color: event.color,
         remark: event.remark,
         user: openid

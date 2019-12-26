@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'Number';
-  src: url('https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/number-01.ttf');
+  src: url('https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/font/Number-01.ttf');
 }
 
 @font-face {
   font-family: 'QcKaiTi';
-  src: url('https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf');
+  src: url('https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/font/QcKaiTi.ttf');
 }
 
 .canvas-wrapper {

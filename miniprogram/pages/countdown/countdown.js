@@ -10,7 +10,7 @@ Page({
   data: {
     today: '2020-01-01',
     pickerDate: '',
-    bgUrl: 'https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/countdown/',
+    bgUrl: 'https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/countdown/',
     background: '',
     bgDefault: 'default.jpg',
     color: '',
@@ -62,7 +62,7 @@ Page({
     this.getFestival(year, month, day);
     // wx.loadFontFace({
     //   family: 'QcKaiTi',
-    //   source: 'url("https://china-festival-1255423800.cos.ap-chengdu.myqcloud.com/font/%E6%B8%85%E8%8C%B6%E6%A5%B7%E4%BD%93.ttf")',
+    //   source: 'url("https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/font/QcKaiTi.ttf")',
     //   success: function() {
     //     self.setData({
     //       loading: false
