@@ -133,7 +133,7 @@ Page({
     this.setData({
       colorActive: index
     })
-    this.canvasData()
+    this.handleCanvasData()
   },
 
   rpxToPx(rpx) {
@@ -152,12 +152,12 @@ Page({
         self.setData({
           bgsrc: tempFilePaths[0]
         })
-        self.canvasData()
+        self.handleCanvasData()
       }
     })
   },
 
-  canvasData: function(flag = false) {
+  handleCanvasData: function(flag = false) {
     let data = this.data,
       color = data.colors[data.colorActive]
     if (data.bgsrc) {
@@ -252,7 +252,11 @@ Page({
       })
       return
     }
-    this.canvasData(true)
+    wx.showLoading({
+      title: '正在上传',
+      mask: true
+    })
+    this.handleCanvasData(true)
   },
 
   getCosSecret: function() {
@@ -339,10 +343,6 @@ Page({
       color: data.colors[data.colorActive],
       background: ''
     }
-    wx.showLoading({
-      title: '正在上传',
-      mask: true
-    })
     if (data.bgsrc) {
       let fileName = `countdown/${app.globalData.userInfo.openid}_${Date.now()}.jpg`
       this.uploadFile(fileName, data.bgsrc, function(err, data) {
