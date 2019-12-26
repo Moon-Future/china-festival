@@ -1,6 +1,5 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
-const cosUpload = require('./tencentCloud.js')
 
 cloud.init()
 const db = cloud.database()
@@ -16,7 +15,7 @@ exports.main = async (event, context) => {
     if (background) {
       const now = Date.now()
       console.log('background', background)
-      const uploadResult = await cosUpload(`${openid}-${now}.jpg`, bg)
+      const uploadResult = await cosUpload(`${openid}-${now}.jpg`, background)
       background = `${openid}-${now}.jpg`
       console.log('uploadResult', uploadResult)
       if (uploadResult.statusCode !== 200) {
@@ -44,6 +43,7 @@ exports.main = async (event, context) => {
       message: '添加成功'
     }
   } catch(e) {
+    console.log(e)
     return {
       status: 0,
       message: '添加失败，请重试'

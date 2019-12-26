@@ -12,7 +12,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // wx.request({
+    //   url: 'https://wxserver.cl8023.com/sts',
+    //   success(res) {
+    //     console.log(res)
+    //   }
+    // })
+    wx.cloud.callFunction({
+      name: 'getCosSecret',
+    }).then(res => {
+      console.log('res', res)
+    }).catch(err => {
 
+    })
   },
 
   /**

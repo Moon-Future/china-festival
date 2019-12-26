@@ -1,5 +1,6 @@
 // miniprogram/pages/addFestival/addFestival.js
 const app = getApp()
+const COS = require('../../js/cos-wx-sdk-v5')
 Page({
 
   /**
@@ -244,6 +245,53 @@ Page({
     this.canvasData(true)
   },
 
+  getCosSecret: function() {
+    return new Promise((resolve, reject) => {
+      wx.cloud.callFunction({
+        name: 'getCosSecret',
+      }).then(res => {
+        resolve(JSON.parse(res.result))
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+
+  getAuthorization: function (options, callback) {
+    wx.cloud.callFunction({
+      name: 'getCosSecret',
+    }).then(res => {
+      const data = JSON.parse(res.result)
+      const credentials = data.credentials
+      console.log('credentials', res)
+      callback({
+        TmpSecretId: credentials.tmpSecretId,
+        TmpSecretKey: credentials.tmpSecretKey,
+        XCosSecurityToken: credentials.sessionToken,
+        ExpiredTime: data.expiredTime, // SDK 在 ExpiredTime 时间前，不会再次调用 getAuthorization
+      })
+    }).catch(err => {
+      
+    })
+  },
+
+  uploadFile: function (fileName, filepath) {
+    const cos = new COS({
+      getAuthorization: this.getAuthorization
+    })
+    cos.postObject({
+      Bucket: 'china-festival-1255423800',
+      Region: 'ap-chengdu',
+      Key: fileName,  //上传COS 的路径 和 文件唯一名
+      FilePath: filepath,
+      onProgress: function (info) {  //进度的回调函数（进度条）
+        console.log(JSON.stringify(info));
+      }
+    }, function(err, data) {
+      console.log(err, data)
+    })
+  },
+
   submit: function() {
     let data = this.data
     if (!data.submit) {
@@ -256,6 +304,10 @@ Page({
       color: data.colors[data.colorActive],
       background: data.bgsrc
     }
+    if (data.bgsrc) {
+      this.uploadFile('test-1.jpg', data.bgsrc)
+    }
+    return
     wx.cloud.callFunction({
       name: 'addFestival',
       data: subData
