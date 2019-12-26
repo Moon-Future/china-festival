@@ -15,7 +15,10 @@ var config = {
   allowPrefix: 'countdown/*',
   // 简单上传和分片，需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/14048
   allowActions: [
+    'name/cos:PutObject',
     'name/cos:PostObject',
+
+    'name/cos:*',
   ],
 };
 
