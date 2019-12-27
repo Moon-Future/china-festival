@@ -367,6 +367,29 @@ Page({
       id: data.id
     }
     if (data.bgsrc && !data.oribgsrc) {
+      //获取 temp临时图片文件的 buffer
+      wx.getFileSystemManager().readFile({
+        filePath: data.bgsrc,  //这里做示例，所以就选取第一张图片
+        success: buffer => {
+          console.log(buffer.data)
+          //这里是 云函数调用方法
+          wx.cloud.callFunction({
+            name: 'addFestival',
+            data: {
+              value: buffer.data
+            },
+            success(res) {
+              console.log(res)
+            }
+          })
+        },
+        error: function(e) {
+          console.log('xxx', e)
+        }
+      })
+      return
+
+
       let fileName = `${app.globalData.userInfo.openid}_${data.festival}_${Date.now()}.jpg`
       this.uploadFile('countdown/' + fileName, data.bgsrc, function(err, data) {
         if (err) {

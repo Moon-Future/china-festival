@@ -21,6 +21,13 @@ exports.main = async (event, context) => {
         message: '删除成功'
       }
     } else {
+
+
+      return {
+        status: 1,
+        message: '添加成功'
+      }
+
       await cloud.openapi.security.msgSecCheck({
         content: event.festival
       })
