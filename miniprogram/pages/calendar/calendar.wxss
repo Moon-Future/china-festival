@@ -1,1 +1,3 @@
-/* miniprogram/pages/calendar/calendar.wxss */
+.month-wrapper {
+  padding-bottom: 110rpx; 
+}

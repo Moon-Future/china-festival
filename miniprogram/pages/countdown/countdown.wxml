@@ -35,16 +35,18 @@
     </view>
     <view class="past-str">
       <text class="canvas-item" data-key="{{past ? 'str3' : 'str2'}}">{{past ? textMap.str3.text : textMap.str2.text}}</text>
+      <text class="canvas-item {{numberFlag ? 'number' : ''}} restday-num" data-key="restDayNum" data-num="true">{{textMap.restDayNum.text}}</text>
+      <text class="canvas-item restday-text" data-key="restDay">{{textMap.restDay.text}}</text>
     </view>
     <view class="countdown">
-      <view class="countdown-item">
+      <!-- <view class="countdown-item">
         <view class="{{numberFlag ? 'number' : ''}}">
           <text class="canvas-item" data-key="restDayNum" data-num="true">{{textMap.restDayNum.text}}</text>
         </view>
         <view class="countdown-time">
           <text class="canvas-item" data-key="restDay">{{textMap.restDay.text}}</text>
         </view>
-      </view>
+      </view> -->
       <view class="countdown-item">
         <view class="{{numberFlag ? 'number' : ''}}">
           <text class="canvas-item" data-key="restHourNum" data-num="true">{{textMap.restHourNum.text}}</text>

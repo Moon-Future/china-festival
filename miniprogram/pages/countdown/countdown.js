@@ -34,7 +34,7 @@ Page({
       restHour: { text: '小时' },
       restMins: { text: '分钟' },
       restSec: { text: '秒' },
-      restDayNum: { text: '00', type: 'num', fontSize: '90rpx' },
+      restDayNum: { text: '00', type: 'num', fontSize: '110rpx' },
       restHourNum: { text: '00', type: 'num', fontSize: '90rpx' },
       restMinsNum: { text: '00', type: 'num', fontSize: '90rpx' },
       restSecNum: { text: '00', type: 'num', fontSize: '90rpx' },

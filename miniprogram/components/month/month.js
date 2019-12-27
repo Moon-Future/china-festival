@@ -30,16 +30,17 @@ Component({
     animalsImg: {
       '鼠': 'Rat', '牛': 'Ox', '虎': 'Tiger', '兔': 'Rabbit', '龙': 'Dragon', '蛇': 'Snake',
       '马': 'Horse', '羊': 'Goat', '猴': 'Monkey', '鸡': 'Rooster', '狗': 'Dog', '猪': 'Pig'
-    }
+    },
+    current: 1,
+    duration: 500,
+    source: true, // swiper source字段
+    prevDays: [],
+    nextDays: []
   },
 
   lifetimes: {
     attached() {
-      let date = new Date();
-      let y = date.getFullYear(),
-        m = date.getMonth() + 1,
-        d = date.getDate();
-      this.initCalendar(y, m, d);
+      this.init()
     }
   },
 
@@ -47,20 +48,69 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    initCalendar(y, m, d) {
+    init: function(y, m, d) {
+      if (!y) {
+        let date = new Date();
+        y = date.getFullYear()
+        m = date.getMonth() + 1
+        d = date.getDate()
+      }
+      this.initCalendar(y, m, d)
+    },
+    prevMonth: function (y, m, d) {
+      let newD = 1, newY, newM
+      if (m == 1) {
+        newY = y - 1
+        newM = 12
+      } else {
+        newY = y
+        newM = m - 1
+      }
+      return { y: newY, m: newM, d: newD }
+    },
+    nextMonth: function(y, m, d) {
+      let newD = 1, newY, newM
+      if (m == 12) {
+        newY = y + 1
+        newM = 1
+      } else {
+        newY = y
+        newM = m + 1
+      }
+      return { y: newY, m: newM, d: newD }
+    },
+    // flag 是否计算前后各一月
+    initCalendar(y, m, d, flag) {
+      let field = 'days'
+      if (flag == 'prev') {
+        field = 'prevDays'
+        let prevResult = this.prevMonth(y, m, d)
+        y = prevResult.y
+        m = prevResult.m
+        d = prevResult.d
+      } else if (flag == 'next') {
+        field = 'nextDays'
+        let nextResult = this.nextMonth(y, m, d)
+        y = nextResult.y
+        m = nextResult.m
+        d = nextResult.d
+      }
+
       let date = new Date(y + '-' + m + '-' + d);
       let w = date.getDay();
       let dateInfo = calendar.solar2lunar(y, m, d);
       let today = new Date();
       let now = today.getFullYear() === y && (today.getMonth() + 1) === m && today.getDate() === d ? true : false;
-      this.setData({
-        year: y,
-        month: m,
-        day: d,
-        week: w,
-        dateInfo: dateInfo,
-        now
-      })
+      if (!flag) {
+        this.setData({
+          year: y,
+          month: m,
+          day: d,
+          week: w,
+          dateInfo: dateInfo,
+          now
+        })
+      }
       let maxDay = new Date(y, m, 0).getDate(),
         weekStart = new Date(y, m - 1, 1).getDay(),
         prevEnd = new Date(y, m - 1, 0).getDate(),
@@ -119,9 +169,11 @@ Component({
         days.push(arr);
       }
       this.setData({
-        days: days
+        [field]: days
       });
-      this.getFestival();
+      if (!flag) {
+        this.getFestival();
+      }
     },
     selectDay(e) {
       let info = e.currentTarget.dataset.info;
@@ -132,7 +184,7 @@ Component({
         day: info.day
       }
       if (info.year !== this.data.year || info.month !== this.data.month) {
-        this.initCalendar(info.year, info.month, info.day);
+        this.init(info.year, info.month, info.day);
       } else {
         for (let i = 0, len = days.length; i < len; i++) {
           var arr = days[i];
@@ -160,8 +212,8 @@ Component({
       }
     },
     getFestival() {
-      const self = this;
-      const days = this.data.days;
+      const self = this
+      const days = this.data.days
       let month = [], lunarMonth = [];
       let now = new Date();
       let infoMap = {};
@@ -187,7 +239,6 @@ Component({
           lunarMonth
         }
       }).then(res => {
-        wx.hideLoading()
         let { festival, lunarFestival } = res.result;
         for (let i = 0, len = days.length; i < len; i++) {
           var arr = days[i];
@@ -206,6 +257,13 @@ Component({
           days: days,
           infoMap: infoMap
         });
+
+        let y = this.data.year
+        let m = this.data.month
+        let d = this.data.day
+        self.initCalendar(y, m, d, 'prev')
+        self.initCalendar(y, m, d, 'next')
+        wx.hideLoading()
       }).catch(err => {
         wx.showToast({
           title: '网络拥堵，请稍后重试',
@@ -267,42 +325,51 @@ Component({
         })
       }
     },
-    touchStart(e) {
-      startX = e.touches[0].pageX
-      startY = e.touches[0].pageY
-    },
-    touchEnd(e) {
-      let endX = e.changedTouches[0].pageX
-      let endY = e.changedTouches[0].pageY
-      let diffx = endX - startX
-      let { year, month, day } = this.data
-      if (diffx > 50 && Math.abs(startY - endY) < 50) {
-        if (month == 1) {
-          month = 12
-          year -= 1
-        } else {
-          month -= 1
-        }
-        day = 1
-        this.bindDateChange({
-          detail: {
-            value: year + '-' + month + '-' + day
-          }
-        });
-      } else if (diffx < -50 && Math.abs(endY - startY) < 50) {
-        if (month == 12) {
-          month = 1
-          year += 1
-        } else {
-          month += 1
-        }
-        day = 1
-        this.bindDateChange({
-          detail: {
-            value: year + '-' + month + '-' + day
-          }
-        });
+    changeTab(e) {
+      if (e.detail.source == '') {
+        this.setData({
+          animationfinishFlag: false,
+        })
+        return
       }
+      this.setData({
+        current: e.detail.current,
+        animationfinishFlag: true
+      })
+    },
+    animationfinish() {
+      let self = this
+      if (!this.data.animationfinishFlag) {
+        return
+      }
+      const { year, month, day } = this.data
+      if (this.data.current == 0) {
+        let { y, m, d } = this.prevMonth(year, month, day)
+        this.init(y, m, d);
+      } else {
+        let { y, m, d } = this.nextMonth(year, month, day)
+        this.init(y, m, d);
+      }
+      this.setData({
+        source: false,
+        duration: 0
+      })
+      setTimeout(function() {
+        self.setData({
+          current: 1,
+          animationfinishFlag: false,
+        })
+      }, 100)
+    },
+    transition() {
+      let duration = 500
+      if (!this.data.source) {
+        duration = 0
+      }
+      this.setData({
+        duration,
+        source: true
+      })
     }
   }
 })

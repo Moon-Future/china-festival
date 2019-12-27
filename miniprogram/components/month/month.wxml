@@ -2,8 +2,8 @@
 <view class="date-wrapper">
   <view class="year-month">
     <picker class="picker-wrapper" mode="date" value="{{date}}" start="1900-1-1" end="2100-12-31" bindchange="bindDateChange">
-       <text class="time">{{year}}年{{month}}月</text>
-       <text class="iconfont icon-arrowdown"></text>
+      <text class="time">{{year}}年{{month}}月</text>
+      <text class="iconfont icon-arrowdown"></text>
     </picker>
     <view class="date">
       <view class="date-time">
@@ -26,19 +26,35 @@
       </view>
     </view>
   </view>
-  <view bindtouchstart="touchStart" bindtouchend="touchEnd">
-    <view class="week">
-      <text class="week-item" wx:for="{{weeks}}" wx:key="index">
-        {{item}}
-      </text>
-    </view>
-    <view class="day">
+  <view class="week">
+    <text class="week-item" wx:for="{{weeks}}" wx:key="index">
+            {{item}}
+          </text>
+  </view>
+  <swiper class="day" duration="{{duration}}" current="{{current}}" bindchange="changeTab" bindanimationfinish="animationfinish" bindtransition="transition">
+    <swiper-item>
+      <view class="day-row" wx:for="{{prevDays}}" wx:key="index" wx:for-item="arr">
+        <view class="day-col {{item.prev || item.next ? 'other-month' : ''}}" wx:for="{{arr}}" wx:key="index">
+          <text class="day-col-num">{{item.day}}</text>
+          <text class="day-col-lunar">{{item.lunar}}</text>
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
       <view class="day-row" wx:for="{{days}}" wx:key="index" wx:for-item="arr">
         <view class="day-col {{item.prev || item.next ? 'other-month' : ''}} {{item.active ? 'day-col-active' : ''}}" wx:for="{{arr}}" wx:key="index" bindtap="selectDay" data-info="{{item}}">
           <text class="day-col-num">{{item.day}}</text>
           <text class="day-col-lunar {{(item.festival || item.lunarFestival) && !item.prev && !item.next ? 'day-col-festival' : ''}} {{item.active ? 'day-col-active' : ''}}">{{item.festival || item.lunarFestival || item.lunar}}</text>
         </view>
       </view>
-    </view>
-  </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="day-row" wx:for="{{nextDays}}" wx:key="index" wx:for-item="arr">
+        <view class="day-col {{item.prev || item.next ? 'other-month' : ''}}" wx:for="{{arr}}" wx:key="index">
+          <text class="day-col-num">{{item.day}}</text>
+          <text class="day-col-lunar">{{item.lunar}}</text>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
 </view>

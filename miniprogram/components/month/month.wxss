@@ -91,6 +91,7 @@
 .day {
   display: flex;
   flex-flow: column;
+  height: 650rpx;
 }
 .day-row {
   display: flex;
