@@ -18,6 +18,7 @@ Page({
     loading: false,
     past: false,
     sadday: false,
+    remark: '',
     textMap: {
       str1: { text: '距离' },
       yearNum: { text: '', type: 'num', fontSize: '60rpx' },
@@ -28,13 +29,13 @@ Page({
       day: { text: '日' },
       lunar: { text: '', center: true },
       festival: { text: '', center: true, fontSize: '120rpx' },
-      str2: { text: '还有', center: true },
-      str3: { text: '已过去', center: true },
+      str2: { text: '还有' },
+      str3: { text: '已去' },
       restDay: { text: '天' },
       restHour: { text: '小时' },
       restMins: { text: '分钟' },
       restSec: { text: '秒' },
-      restDayNum: { text: '00', type: 'num', fontSize: '110rpx' },
+      restDayNum: { text: '00', type: 'num', fontSize: '110rpx', left: '50', top: '20' },
       restHourNum: { text: '00', type: 'num', fontSize: '90rpx' },
       restMinsNum: { text: '00', type: 'num', fontSize: '90rpx' },
       restSecNum: { text: '00', type: 'num', fontSize: '90rpx' },
@@ -211,6 +212,9 @@ Page({
       }).exec()
     })
   },
+  rpxToPx(rpx) {
+    return rpx / 750 * wx.getSystemInfoSync().windowWidth
+  },
   share: async function() {
     wx.showLoading({
       title: '绘制分享图片中',
@@ -260,8 +264,8 @@ Page({
         type: 'text',
         text: (textMap[key].text || '') + '',
         css: {
-          left: (textMap[key].center ? 0 : (rect.left - wrapper.left) ) + 'px',
-          top: rect.top - wrapper.top + 'px',
+          left: (textMap[key].center ? 0 : (rect.left - wrapper.left + self.rpxToPx(textMap[key].left || 0)) ) + 'px',
+          top: rect.top - wrapper.top + self.rpxToPx(textMap[key].top || 0) + 'px',
           color: this.data.color || '#fff',
           width: wrapper.width + 'px',
           textAlign: textMap[key].center ? 'center' : 'initial',

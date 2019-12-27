@@ -71,7 +71,7 @@
   font-size: 120rpx;
   /* color: #fff; */
   height: 200rpx;
-  line-height: 200rpx;
+  /* line-height: 200rpx; */
 }
 .festival-img {
   height: 64px;
@@ -80,13 +80,15 @@
   text-align: center;
   padding: 30rpx 0;
   display: flex;
-  flex-flow: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+  padding-right: 60rpx;
 }
 .restday-num {
   font-size: 110rpx;
   margin: 10rpx 0;
+  padding: 0 20rpx 0 50rpx;
+  margin-bottom: -5px;
 }
 .countdown {
   display: flex;
@@ -107,4 +109,14 @@
 }
 .number {
   font-family: Number;
+}
+.remark-wrapper {
+  position: absolute;
+  bottom: 50rpx;
+  display: flex;
+  color: #fff;
+}
+.remark {
+  width: 95%;
+  margin: auto;
 }

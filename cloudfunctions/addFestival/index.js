@@ -21,6 +21,12 @@ exports.main = async (event, context) => {
         message: '删除成功'
       }
     } else {
+      await cloud.openapi.security.msgSecCheck({
+        content: event.festival
+      })
+      await cloud.openapi.security.msgSecCheck({
+        content: event.remark
+      })
       const data = {
         festival: event.festival,
         year: event.date.split('-')[0],
@@ -49,6 +55,13 @@ exports.main = async (event, context) => {
       }
     }
   } catch(e) {
+    console.log(e)
+    if (e.errCode === 87014) {
+      return {
+        status: 0,
+        message: '内容含有违法违规内容'
+      }
+    }
     return {
       status: 0,
       message: '提交失败，请重试'

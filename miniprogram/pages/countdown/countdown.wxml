@@ -72,6 +72,9 @@
         </view>
       </view>
     </view>
+    <view class="remark-wrapper">
+      <text class="remark">{{remark}}</text>
+    </view>
   </view>
   <navbar activeIndex="1"></navbar>
 </view>
