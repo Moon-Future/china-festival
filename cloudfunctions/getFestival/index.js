@@ -17,12 +17,13 @@ exports.main = async (event, context) => {
         festivalResult = await festivalCollection.where({
           user: openid
         }).get()
+        return festivalResult.data
       } else {
         festivalResult = await festivalCollection.where({
           _id: event.id
         }).get()
+        return festivalResult.data[0]
       }
-      return festivalResult.data
     } catch(e) {
       return { status: 0, message: '请先登录' }
     }

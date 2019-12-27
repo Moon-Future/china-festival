@@ -21,5 +21,6 @@
     <text class="iconfont icon-add" bindtap="chooseImage" wx:if="{{!imgShow}}"></text>
     <painter palette="{{canvasData}}" bindtap="chooseImage" bind:imgOK="onImgOK" wx:if="{{imgShow}}"></painter>
   </view>
-  <button type="primary" size="default" class="submit" bindtap="submitClick">提交</button>
+  <button type="primary" size="default" class="submit" bindtap="submitClick">提 交</button>
+  <button type="warn" size="default" class="submit del-submit" bindtap="submitDel" wx:if="{{id}}">删 除</button>
 </view>

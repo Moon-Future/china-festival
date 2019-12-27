@@ -21,7 +21,8 @@
       <view class="date-now">
         <text class="data-now-text" bindtap="backToday">{{now ? '今' : '☺'}}</text>
         <text class="iconfont icon-loudou" bindtap="gotoCountdown"></text>
-        <text class="iconfont icon-memory"></text>
+        <!-- <text class="iconfont icon-memory" bindtap="goadd"></text> -->
+        <button open-type="getUserInfo" class="iconfont icon-memory" bindgetuserinfo="goadd"></button>
       </view>
     </view>
   </view>

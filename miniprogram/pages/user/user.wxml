@@ -1,5 +1,5 @@
 <view class="user-wrapper">
-  <view class="user-info" style="background-image:url(../../images/userbg.jpg)">
+  <view class="user-info">
     <image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
     <text class="user-name">{{userInfo.nickName}}</text>
   </view>

@@ -11,8 +11,17 @@ exports.main = async (event, context) => {
   try {
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
-    const result = await festivalCollection.add({
-      data: {
+    const id = event.id
+    if (event.del) {
+      await festivalCollection.where({
+        _id: id
+      }).remove()
+      return {
+        status: 1,
+        message: '删除成功'
+      }
+    } else {
+      const data = {
         festival: event.festival,
         year: event.date.split('-')[0],
         month: event.date.split('-')[1],
@@ -23,16 +32,26 @@ exports.main = async (event, context) => {
         remark: event.remark,
         user: openid
       }
-    })
-    return {
-      status: 1,
-      message: '添加成功'
+      if (id) {
+        await festivalCollection.where({
+          _id: id
+        }).update({
+          data: data
+        })
+      } else {
+        await festivalCollection.add({
+          data: data
+        })
+      }
+      return {
+        status: 1,
+        message: '添加成功'
+      }
     }
   } catch(e) {
-    console.log(e)
     return {
       status: 0,
-      message: '添加失败，请重试'
+      message: '提交失败，请重试'
     }
   }
 }

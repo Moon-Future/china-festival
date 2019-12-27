@@ -249,6 +249,24 @@ Component({
         url: '/pages/countdown/countdown?year=' + data.year + '&month=' + data.month + '&day=' + data.day
       });
     },
+    goadd(e) {
+      let userInfo = e.detail.userInfo
+      let data = this.data;
+      if (userInfo) {
+        wx.cloud.callFunction({
+          name: 'getUserInfo',
+          data: {}
+        }).then(res => {
+          userInfo.openid = res.result.openid
+          app.globalData.userInfo = userInfo
+          wx.navigateTo({
+            url: '/pages/addFestival/addFestival?date=' + data.year + '-' + data.month + '-' + data.day
+          });
+        }).catch(err => {
+
+        })
+      }
+    },
     touchStart(e) {
       startX = e.touches[0].pageX
       startY = e.touches[0].pageY

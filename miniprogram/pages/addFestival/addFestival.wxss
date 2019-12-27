@@ -54,6 +54,11 @@
   color: #ddd;
 }
 .submit {
-  width: 100% !important;
-  margin-top: 20rpx;
+  width: 95% !important;
+  margin: 30rpx 0;
+  padding: 20rpx
+}
+.del-submit {
+  background: red !important;
+  color: #fff !important;
 }

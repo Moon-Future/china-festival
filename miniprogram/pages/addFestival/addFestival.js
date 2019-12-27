@@ -13,6 +13,7 @@ Page({
     bgsrc: '',
     colors: ['#ffffff', '#222831', '#fcbad3', '#00adb5', '#b83b5e', '#ff2e63', '#3f72af', '#ff9a00', '#ca82f8'],
     colorActive: 0,
+    bgUrl: 'https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/countdown/',
     canvasData: {},
     imgShow: false
   },
@@ -30,6 +31,11 @@ Page({
     })
     if (options.id) {
       this.getFestival(options.id)
+    }
+    if (options.date) {
+      this.setData({
+        date: options.date
+      })
     }
   },
 
@@ -101,14 +107,23 @@ Page({
         })
         return
       }
-      let data = res.result[0]
+      let data = res.result
       self.setData({
         festival: data.festival,
         date: `${data.year}-${data.month}-${data.day}`,
         remark: data.remark || '',
-        bgsrc: data.background[0],
         colorActive: self.data.colors.indexOf(data.color),
+        background: data.background[0],
+        id: id
       })
+      if (data.background[0]) {
+        self.setData({
+          oribgsrc: self.data.bgUrl + data.background[0],
+          bgsrc: self.data.bgUrl + data.background[0],
+          imgShow: true
+        })
+        self.handleCanvasData()
+      }
     }).catch(err => {
       wx.hideLoading()
     })
@@ -150,7 +165,8 @@ Page({
         // tempFilePath可以作为img标签的src属性显示图片
         const tempFilePaths = res.tempFilePaths
         self.setData({
-          bgsrc: tempFilePaths[0]
+          bgsrc: tempFilePaths[0],
+          oribgsrc: ''
         })
         self.handleCanvasData()
       }
@@ -161,6 +177,9 @@ Page({
     let data = this.data,
       color = data.colors[data.colorActive]
     if (data.bgsrc) {
+      wx.showLoading({
+        mask: true
+      })
       let canvasData = {
         // background: data.bgsrc,
         width: data.width + 'px',
@@ -217,7 +236,7 @@ Page({
       })
     } else {
       this.setData({
-        imgShow: false,
+        imgShow: data.bgsrc ? true : false,
         submit: flag
       })
       this.submit()
@@ -227,11 +246,14 @@ Page({
   delImg: function() {
     this.setData({
       imgShow: false,
-      bgsrc: ''
+      bgsrc: '',
+      oribgsrc: '',
+      background: ''
     })
   },
 
   onImgOK: function(e) {
+    wx.hideLoading()
     let data = this.data
     if (!data.submit) {
       return
@@ -341,11 +363,12 @@ Page({
       date: data.date,
       remark: data.remark,
       color: data.colors[data.colorActive],
-      background: ''
+      background: data.background,
+      id: data.id
     }
-    if (data.bgsrc) {
-      let fileName = `countdown/${app.globalData.userInfo.openid}_${Date.now()}.jpg`
-      this.uploadFile(fileName, data.bgsrc, function(err, data) {
+    if (data.bgsrc && !data.oribgsrc) {
+      let fileName = `${app.globalData.userInfo.openid}_${data.festival}_${Date.now()}.jpg`
+      this.uploadFile('countdown/' + fileName, data.bgsrc, function(err, data) {
         if (err) {
           wx.showToast({
             title: '图片上传失败，请重试',
@@ -361,6 +384,41 @@ Page({
     } else {
       this.submitData(subData)
     }
-    
+  },
+
+  submitDel: function() {
+    const data = this.data
+    wx.showModal({
+      content: '确认删除？',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({
+            mask: true,
+          })
+          wx.cloud.callFunction({
+            name: 'addFestival',
+            data: { id: data.id, del: true }
+          }).then(res => {
+            if (res.result.status == 1) {
+              wx.showToast({
+                title: res.result.message,
+                duration: 2000,
+                mask: true
+              })
+              wx.navigateBack()
+            } else {
+              wx.showToast({
+                title: res.result.message,
+                icon: 'none',
+                duration: 2000,
+                mask: true
+              })
+            }
+          }).catch(err => {
+
+          })
+        }
+      }
+    })
   }
 })

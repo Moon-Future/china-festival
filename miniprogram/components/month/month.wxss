@@ -77,6 +77,11 @@
 }
 .icon-memory {
   font-size: 50rpx;
+  width: initial !important;
+  padding: initial !important;
+  font-weight: initial !important;
+  color: #fff !important;
+  min-height: initial !important;
 }
 .week {
   display: flex;

@@ -14,26 +14,32 @@ Page({
    */
   onLoad: function (options) {
     let self = this
-    wx.getSetting({
-      success: async function (res) {
-        if (res.authSetting['scope.userInfo']) {
-          let info = await self.getUserInfo()
-          let { userInfo } = info
-          wx.cloud.callFunction({
-            name: 'getUserInfo',
-            data: {}
-          }).then(res => {
-            userInfo.openid = res.result.openid
-            self.setData({
-              userInfo
-            })
-            app.globalData.userInfo = userInfo
-          }).catch(err => {
+    if (!app.globalData.userInfo) {
+      wx.getSetting({
+        success: async function (res) {
+          if (res.authSetting['scope.userInfo']) {
+            let info = await self.getUserInfo()
+            let { userInfo } = info
+            wx.cloud.callFunction({
+              name: 'getUserInfo',
+              data: {}
+            }).then(res => {
+              userInfo.openid = res.result.openid
+              self.setData({
+                userInfo
+              })
+              app.globalData.userInfo = userInfo
+            }).catch(err => {
 
-          })
+            })
+          }
         }
-      }
-    })
+      })
+    } else {
+      self.setData({
+        userInfo: app.globalData.userInfo
+      })
+    }
   },
 
   /**

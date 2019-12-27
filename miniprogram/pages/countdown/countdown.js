@@ -223,15 +223,34 @@ Page({
     let textMap = this.data.textMap
     let wrapper = (await this.clientRect('.countdown-card'))[0]
     let rects = await this.clientRect('.canvas-item')
+    let codeWidth = 150, codeHeight = 258 / 515 * codeWidth
     this.setData({
       numberFlag: true
     })
     let canvasData = {
-      background: this.data.background,
       width: wrapper.width + 'px',
-      height: wrapper.height + 'px',
+      height: wrapper.height + codeHeight + 'px',
       borderRadius: '20rpx',
-      views: []
+      views: [{
+        type: 'image',
+        url: this.data.background,
+        css: {
+          width: wrapper.width + 'px',
+          height: wrapper.height + 'px',
+          left: '0px',
+          top: '0px',
+        }
+      }, {
+        type: 'image',
+        url: '/images/pcode.jpg',
+        mode: 'aspectFill',
+        css: {
+          width: codeWidth + 'px',
+          // height: codeWidth + 'px',
+          left: wrapper.width / 2 - codeWidth / 2 + 'px',
+          top: wrapper.height + 'px',
+        }
+      }]
     }
     let views = []
     for (let i = 0, len = rects.length; i < len; i++) {
@@ -243,7 +262,7 @@ Page({
         css: {
           left: (textMap[key].center ? 0 : (rect.left - wrapper.left) ) + 'px',
           top: rect.top - wrapper.top + 'px',
-          color: '#fff',
+          color: this.data.color || '#fff',
           width: wrapper.width + 'px',
           textAlign: textMap[key].center ? 'center' : 'initial',
           fontSize: textMap[key].fontSize || '40rpx',
@@ -251,7 +270,7 @@ Page({
         }
       })
     }
-    canvasData.views = views
+    canvasData.views = canvasData.views.concat(views)
     self.setData({
       canvasData
     })
