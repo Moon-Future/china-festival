@@ -8,9 +8,45 @@
   src: url('https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/font/QcKaiTi.ttf');
 }
 
+.canvas-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
 .canvas-wrapper {
   position: fixed;
-  left: 1000px;
+  z-index: 5000;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  align-items: center;
+}
+.canvas-btn {
+  width: 90%;
+  margin-top: 20rpx;
+  color: #fff;
+  height: 100rpx;
+  line-height: 100rpx;
+  display: flex;
+  justify-content: center;
+}
+.canvas-save, .canvas-cancel {
+  border-radius: 50rpx;
+  text-align: center;
+  background: #fe9801;
+  width: 300rpx;
+}
+.canvas-cancel {
+  background: #fa163f;
+  margin-left: 20rpx;
 }
 
 .time-wrapper {

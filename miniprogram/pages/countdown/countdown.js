@@ -41,13 +41,18 @@ Page({
       restSecNum: { text: '00', type: 'num', fontSize: '90rpx' },
     },
     numberFlag: true,
-    canvasData: {}
+    canvasData: {},
+    dialogButton: [
+      { text: '保存图片' }
+    ],
+    dialogShow: false,
+    widthPixels: 300
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: async function (options) {
     const self = this;
     if (!options.year) {
       options = app.globalData.date || {year: 2020, month: 1, day: 1}
@@ -58,7 +63,7 @@ Page({
       'textMap.monthNum.text': month,
       'textMap.dayNum.text': day,
       query: wx.createSelectorQuery(),
-      id,
+      id: id || ''
     })
     this.getFestival(year, month, day);
     // wx.loadFontFace({
@@ -70,6 +75,10 @@ Page({
     //     })
     //   }
     // })
+    let wrapper = (await this.clientRect('.countdown-card'))[0]
+    this.setData({
+      canvasHeight: wrapper.height * 0.9 + 30
+    })
   },
 
   /**
@@ -221,38 +230,43 @@ Page({
       mask: true
     })
     this.setData({
-      numberFlag: false
+      numberFlag: false,
+      dialogShow: true
     })
     let self = this
     let textMap = this.data.textMap
     let wrapper = (await this.clientRect('.countdown-card'))[0]
     let rects = await this.clientRect('.canvas-item')
-    let codeWidth = 150, codeHeight = 258 / 515 * codeWidth
+    let codeWidth = 50, codeHeight = 240 / 240 * codeWidth
     this.setData({
-      numberFlag: true
+      numberFlag: true,
+      widthPixels: wrapper.width * 0.9
     })
     let canvasData = {
       width: wrapper.width + 'px',
-      height: wrapper.height + codeHeight + 'px',
+      height: wrapper.height + codeHeight - 20 + 'px',
       borderRadius: '20rpx',
-      views: [{
+      views: [
+        {
         type: 'image',
         url: this.data.background,
         css: {
           width: wrapper.width + 'px',
-          height: wrapper.height + 'px',
+          height: wrapper.height + codeHeight - 20 + 'px',
           left: '0px',
           top: '0px',
+          borderRadius: '20rpx',
         }
-      }, {
+      }, 
+      {
         type: 'image',
-        url: '/images/pcode.jpg',
+        url: '/images/ecode.png',
         mode: 'aspectFill',
         css: {
           width: codeWidth + 'px',
-          // height: codeWidth + 'px',
-          left: wrapper.width / 2 - codeWidth / 2 + 'px',
-          top: wrapper.height + 'px',
+          left: wrapper.width - codeWidth + 'px',
+          top: wrapper.height - 20 + 'px',
+          borderRadius: '0 0 20rpx 0',
         }
       }]
     }
@@ -280,16 +294,34 @@ Page({
     })
   },
   onImgOK: function(res) {
+    wx.hideLoading()
+    this.setData({
+      saveFile: res.detail.path,
+    })
+  },
+  saveImg: function() {
+    const self = this
+    const data = this.data
+    wx.showLoading({
+      mask: true,
+    })
     wx.saveImageToPhotosAlbum({
-      filePath: res.detail.path,
+      filePath: data.saveFile,
       success(res) {
-        wx.hideLoading()
         wx.showToast({
           title: '保存成功',
           icon: 'success',
           duration: 2000
         })
+        self.setData({
+          dialogShow: false
+        })
       }
+    })
+  },
+  cancelImg: function() {
+    this.setData({
+      dialogShow: false
     })
   }
 })

@@ -10,11 +10,13 @@ Page({
     festival: '',
     date: '2020-01-01',
     remark: '',
+    background: '', // 背景图片名称
     bgsrc: '',
     colors: ['#ffffff', '#222831', '#fcbad3', '#00adb5', '#b83b5e', '#ff2e63', '#3f72af', '#ff9a00', '#ca82f8'],
     colorActive: 0,
     bgUrl: 'https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/countdown/',
     canvasData: {},
+    widthPixels: 150,
     imgShow: false
   },
 
@@ -122,7 +124,6 @@ Page({
           bgsrc: self.data.bgUrl + data.background[0],
           imgShow: true
         })
-        self.handleCanvasData()
       }
     }).catch(err => {
       wx.hideLoading()
@@ -148,7 +149,6 @@ Page({
     this.setData({
       colorActive: index
     })
-    this.handleCanvasData()
   },
 
   rpxToPx(rpx) {
@@ -161,86 +161,35 @@ Page({
       count: 1,
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
-      success(res) {
+      success: async function(res) {
         // tempFilePath可以作为img标签的src属性显示图片
         const tempFilePaths = res.tempFilePaths
         self.setData({
           bgsrc: tempFilePaths[0],
-          oribgsrc: ''
+          oribgsrc: '',
+          imgShow: true
         })
-        self.handleCanvasData()
       }
     })
   },
 
-  handleCanvasData: function(flag = false) {
-    let data = this.data,
-      color = data.colors[data.colorActive]
-    if (data.bgsrc) {
-      wx.showLoading({
-        mask: true
-      })
-      let canvasData = {
-        // background: data.bgsrc,
-        width: data.width + 'px',
-        height: data.height + 'px',
-        views: [{
-          type: 'image',
-          url: data.bgsrc,
-          css: {
-            width: data.width + 'px',
-            height: data.height + 'px'
-          }
-        }]
-      }
-      if (!flag) {
-        canvasData.views = canvasData.views.concat([{
-          type: 'text',
-          text: '2019 年 12 月 25 号',
-          css: {
-            left: '0px',
-            top: '50px',
-            color: color,
-            width: data.width + 'px',
-            textAlign: 'center',
-            fontSize: '40rpx'
-          }
-        }, {
-          type: 'text',
-          text: '春节',
-          css: {
-            left: '0px',
-            top: '200px',
-            color: color,
-            width: data.width + 'px',
-            textAlign: 'center',
-            fontSize: '120rpx'
-          }
-        }, {
-          type: 'text',
-          text: '07 18 18 18',
-          css: {
-            left: '0px',
-            top: '400px',
-            color: color,
-            width: data.width + 'px',
-            textAlign: 'center',
-            fontSize: '60rpx'
-          }
-        }])
-      }
-      this.setData({
-        imgShow: true,
-        canvasData,
-        submit: flag
-      })
-    } else {
-      this.setData({
-        imgShow: data.bgsrc ? true : false,
-        submit: flag
-      })
-      this.submit()
+  drawCanvas: function() {
+    let data = this.data
+    let canvasData = {
+      width: data.width + 'px',
+      height: data.height + 'px',
+      views: [{
+        type: 'image',
+        url: data.bgsrc,
+        css: {
+          width: data.width + 'px',
+          height: data.height + 'px'
+        }
+      }]
     }
+    this.setData({
+      canvasData
+    })
   },
 
   delImg: function() {
@@ -252,16 +201,24 @@ Page({
     })
   },
 
-  onImgOK: function(e) {
-    wx.hideLoading()
+  onImgOK: async function(e) {
     let data = this.data
-    if (!data.submit) {
-      return
+    if (data.checkImg) {  // 检查图片后，改变像素，重新绘画
+      const result = await this.checkImg(e.detail.path)
+      if (result.status == 0) {
+        return
+      }
+      this.setData({
+        checkImg: false,
+        widthPixels: 300
+      })
+      this.drawCanvas()
+    } else {
+      this.setData({
+        bgsrc: e.detail.path
+      })
+      this.submit()
     }
-    this.setData({
-      bgsrc: e.detail.path
-    })
-    this.submit()
   },
 
   submitClick: function() {
@@ -278,7 +235,49 @@ Page({
       title: '正在上传',
       mask: true
     })
-    this.handleCanvasData(true)
+    if (data.bgsrc && !data.oribgsrc) {
+      this.setData({
+        checkImg: true,
+        widthPixels: 100
+      })
+      this.drawCanvas()
+    } else {
+      this.submit()
+    }
+  },
+
+  checkImg: function(imgsrc) {
+    const data = this.data
+    if (data.oribgsrc) {
+      return { status: 1 }
+    }
+    return new Promise((resolve, reject) => {
+      //获取 temp临时图片文件的 buffer
+      wx.getFileSystemManager().readFile({
+        filePath: imgsrc,  //这里做示例，所以就选取第一张图片
+        success: buffer => {
+          //这里是 云函数调用方法
+          wx.cloud.callFunction({
+            name: 'checkContent',
+            data: {
+              buffer: buffer.data
+            },
+            success(res) {
+              if (res.result.status == 0) {
+                wx.showToast({
+                  title: res.result.message,
+                  icon: 'none'
+                })
+              }
+              resolve(res.result)
+            }
+          })
+        },
+        error: function (e) {
+          reject(e)
+        }
+      })
+    })
   },
 
   getCosSecret: function() {
@@ -355,9 +354,6 @@ Page({
   submit: function() {
     let self = this
     let data = this.data
-    if (!data.submit) {
-      return
-    }
     let subData = {
       festival: data.festival,
       date: data.date,
@@ -367,29 +363,6 @@ Page({
       id: data.id
     }
     if (data.bgsrc && !data.oribgsrc) {
-      //获取 temp临时图片文件的 buffer
-      wx.getFileSystemManager().readFile({
-        filePath: data.bgsrc,  //这里做示例，所以就选取第一张图片
-        success: buffer => {
-          console.log(buffer.data)
-          //这里是 云函数调用方法
-          wx.cloud.callFunction({
-            name: 'addFestival',
-            data: {
-              value: buffer.data
-            },
-            success(res) {
-              console.log(res)
-            }
-          })
-        },
-        error: function(e) {
-          console.log('xxx', e)
-        }
-      })
-      return
-
-
       let fileName = `${app.globalData.userInfo.openid}_${data.festival}_${Date.now()}.jpg`
       this.uploadFile('countdown/' + fileName, data.bgsrc, function(err, data) {
         if (err) {

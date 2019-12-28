@@ -1,6 +1,10 @@
-<!-- <canvas canvas-id="draw-img" style="width:{{canvasW}}px;height:{{canvasH}}px"></canvas> -->
-<view class="canvas-wrapper">
-  <painter palette="{{canvasData}}" bind:imgOK="onImgOK"></painter>
+<view class="canvas-mask" hidden="{{!dialogShow}}"></view>
+<view class="canvas-wrapper" hidden="{{!dialogShow}}">
+  <painter palette="{{canvasData}}" bind:imgOK="onImgOK" widthPixels="{{widthPixels}}" style="height:{{canvasHeight}}px"></painter>
+  <view class="canvas-btn">
+    <view class="canvas-save" bindtap="saveImg">保 存 图 片</view>
+    <view class="canvas-cancel" bindtap="cancelImg">取 消</view>
+  </view>
 </view>
 <view class="countdown-wrapper">
   <view class="time-wrapper">

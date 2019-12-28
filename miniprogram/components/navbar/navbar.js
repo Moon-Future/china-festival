@@ -47,7 +47,7 @@ Component({
       if (userInfo) {
         wx.cloud.callFunction({
           name: 'getUserInfo',
-          data: {}
+          data: userInfo
         }).then(res => {
           userInfo.openid = res.result.openid
           app.globalData.userInfo = userInfo

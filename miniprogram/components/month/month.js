@@ -31,16 +31,31 @@ Component({
       '鼠': 'Rat', '牛': 'Ox', '虎': 'Tiger', '兔': 'Rabbit', '龙': 'Dragon', '蛇': 'Snake',
       '马': 'Horse', '羊': 'Goat', '猴': 'Monkey', '鸡': 'Rooster', '狗': 'Dog', '猪': 'Pig'
     },
+    gzDate: '',
     current: 1,
     duration: 500,
     source: true, // swiper source字段
     prevDays: [],
-    nextDays: []
+    nextDays: [],
+    itemShow: false
   },
 
   lifetimes: {
     attached() {
+      let self = this
       this.init()
+      wx.cloud.callFunction({
+        name: 'getUserInfo',
+        data: { itemShow: true }
+      }).then(res => {
+        if (res.result.status == 1) {
+          self.setData({
+            itemShow: true
+          })
+        }
+      }).catch(err => {
+
+      })
     }
   },
 
@@ -313,7 +328,7 @@ Component({
       if (userInfo) {
         wx.cloud.callFunction({
           name: 'getUserInfo',
-          data: {}
+          data: userInfo
         }).then(res => {
           userInfo.openid = res.result.openid
           app.globalData.userInfo = userInfo

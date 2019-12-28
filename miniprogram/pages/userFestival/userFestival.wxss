@@ -1,3 +1,13 @@
+.userfestival-wrapper {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
 .userfestival-item {
   background: #fff;
   width: 90%;

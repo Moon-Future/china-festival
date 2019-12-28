@@ -83,19 +83,32 @@ export default class Painter {
    */
   _doClip(borderRadius, width, height) {
     if (borderRadius && width && height) {
+      let border = borderRadius.split(' ')
+      let r1 = 0
+      let r2 = 0
+      let r3 = 0
+      let r4 = 0
+      if (border.length == 1) {
+        r1 = r2 = r3 = r4 = Math.min(border[0].toPx(), width / 2, height / 2);
+      } else {
+        r1 = Math.min(border[0] == 0 ? 0 : border[0].toPx(), width / 2, height / 2);
+        r2 = Math.min(border[1] == 0 ? 0 : border[1].toPx(), width / 2, height / 2);
+        r3 = Math.min(border[2] == 0 ? 0 : border[2].toPx(), width / 2, height / 2);
+        r4 = Math.min(border[3] == 0 ? 0 : border[3].toPx(), width / 2, height / 2);
+      }
       const r = Math.min(borderRadius.toPx(), width / 2, height / 2);
       // 防止在某些机型上周边有黑框现象，此处如果直接设置 fillStyle 为透明，在 Android 机型上会导致被裁减的图片也变为透明， iOS 和 IDE 上不会
       // globalAlpha 在 1.9.90 起支持，低版本下无效，但把 fillStyle 设为了 white，相对默认的 black 要好点
       this.ctx.globalAlpha = 0;
       this.ctx.fillStyle = 'white';
       this.ctx.beginPath();
-      this.ctx.arc(-width / 2 + r, -height / 2 + r, r, 1 * Math.PI, 1.5 * Math.PI);
-      this.ctx.lineTo(width / 2 - r, -height / 2);
-      this.ctx.arc(width / 2 - r, -height / 2 + r, r, 1.5 * Math.PI, 2 * Math.PI);
-      this.ctx.lineTo(width / 2, height / 2 - r);
-      this.ctx.arc(width / 2 - r, height / 2 - r, r, 0, 0.5 * Math.PI);
-      this.ctx.lineTo(-width / 2 + r, height / 2);
-      this.ctx.arc(-width / 2 + r, height / 2 - r, r, 0.5 * Math.PI, 1 * Math.PI);
+      this.ctx.arc(-width / 2 + r1, -height / 2 + r1, r1, 1 * Math.PI, 1.5 * Math.PI);
+      this.ctx.lineTo(width / 2 - r2, -height / 2);
+      this.ctx.arc(width / 2 - r2, -height / 2 + r2, r2, 1.5 * Math.PI, 2 * Math.PI);
+      this.ctx.lineTo(width / 2, height / 2 - r3);
+      this.ctx.arc(width / 2 - r3, height / 2 - r3, r3, 0, 0.5 * Math.PI);
+      this.ctx.lineTo(-width / 2 + r4, height / 2);
+      this.ctx.arc(-width / 2 + r4, height / 2 - r4, r4, 0.5 * Math.PI, 1 * Math.PI);
       this.ctx.closePath();
       this.ctx.fill();
       // 在 ios 的 6.6.6 版本上 clip 有 bug，禁掉此类型上的 clip，也就意味着，在此版本微信的 ios 设备下无法使用 border 属性

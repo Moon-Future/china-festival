@@ -6,7 +6,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo: {}
+    userInfo: {},
+    itemShow: false
   },
 
   /**
@@ -23,12 +24,13 @@ Page({
             wx.cloud.callFunction({
               name: 'getUserInfo',
               data: {}
-            }).then(res => {
+            }).then(async function (res) {
               userInfo.openid = res.result.openid
               self.setData({
                 userInfo
               })
               app.globalData.userInfo = userInfo
+              await addUser(userInfo)
             }).catch(err => {
 
             })
@@ -40,6 +42,18 @@ Page({
         userInfo: app.globalData.userInfo
       })
     }
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: { itemShow: true }
+    }).then(res => {
+      if (res.result.status == 1) {
+        self.setData({
+          itemShow: true
+        })
+      }
+    }).catch(err => {
+
+    })
   },
 
   /**
@@ -89,6 +103,19 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  addUser: function(userInfo) {
+    return new Promise((resolve, reject) => {
+      wx.cloud.callFunction({
+        name: 'addUser',
+        data: userInfo
+      }).then(res => {
+        resolve(true)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
 
   getUserInfo: function() {

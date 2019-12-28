@@ -1,0 +1,17 @@
+<view class="lunar-container">
+  <view class="yang-wrapper">
+    <text class="form-item form-title">公历</text>
+    <picker class="picker-wrapper" mode="date" value="{{yangDate}}" start="1900-1-1" end="2100-12-31" bindchange="yangDateChange">
+      <input class="form-item form-inp" value="{{yangDate}}" disabled="true"></input>
+    </picker>
+  </view>
+  <view class="lunar-wrapper">
+    <text class="form-item form-title">农历</text>
+    <picker class="picker-wrapper" mode="date" value="{{lunarDate}}" start="1900-1-1" end="2100-12-31" bindchange="lunarDateChange">
+      <input class="form-item form-inp" value="{{lunarDate}}" disabled="true"></input>
+    </picker>
+  </view>
+  <view class="date-detail">
+  
+  </view>
+</view>

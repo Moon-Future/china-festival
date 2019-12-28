@@ -9,9 +9,10 @@
       <view class="date-time">
         <text class="date-day">{{day}}</text>
         <view class="date-week">
-          <text>星期{{weeks[week]}}</text>
+          <text>星期{{weeks[week]}}({{dateInfo.astro}})</text>
           <text>{{dateInfo.IMonthCn}}{{dateInfo.IDayCn}}</text>
-          <text>{{festival}}</text>
+          <text>{{dateInfo.gzYear}}{{dateInfo.gzMonth}}{{dateInfo.gzDay}}</text>
+          <text class="festival-color">{{festival}}</text>
         </view>
       </view>
       <view class="animal">
@@ -22,7 +23,7 @@
         <text class="data-now-text" bindtap="backToday">{{now ? '今' : '☺'}}</text>
         <text class="iconfont icon-loudou" bindtap="gotoCountdown"></text>
         <!-- <text class="iconfont icon-memory" bindtap="goadd"></text> -->
-        <button open-type="getUserInfo" class="iconfont icon-memory" bindgetuserinfo="goadd"></button>
+        <button wx:if="{{itemShow}}" open-type="getUserInfo" class="iconfont icon-memory" bindgetuserinfo="goadd"></button>
       </view>
     </view>
   </view>

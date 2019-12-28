@@ -17,10 +17,19 @@
     <text>背景</text>
     <text class="iconfont icon-del" hidden="{{!imgShow}}" bindtap="delImg"></text>
   </view>
-  <view class="{{imgShow ? 'form-upload-img' : 'form-upload'}}">
-    <text class="iconfont icon-add" bindtap="chooseImage" wx:if="{{!imgShow}}"></text>
-    <painter palette="{{canvasData}}" bindtap="chooseImage" bind:imgOK="onImgOK" wx:if="{{imgShow}}"></painter>
+  <view class="form-upload" hidden="{{imgShow}}">
+    <text class="iconfont icon-add" bindtap="chooseImage"></text>
+  </view>
+  <view class="form-upload-img" style="height:{{height}}px;color:{{colors[colorActive]}}" bindtap="chooseImage" hidden="{{!imgShow}}">
+    <image src="{{bgsrc}}" class="preview-img" mode="aspectFill"></image>
+    <view class="form-upload-text">
+      <text>2020 年 1 月 24 日</text>
+      <text>腊月三十</text>
+      <text>春节</text>
+      <text>00 天 00 小时 00 分钟 00 秒</text>
+    </view>
   </view>
   <button type="primary" size="default" class="submit" bindtap="submitClick">提 交</button>
   <button type="warn" size="default" class="submit del-submit" bindtap="submitDel" wx:if="{{id}}">删 除</button>
+  <painter class="painter" palette="{{canvasData}}" bind:imgOK="onImgOK" widthPixels="{{widthPixels}}"></painter>
 </view>

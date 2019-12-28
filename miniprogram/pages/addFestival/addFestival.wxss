@@ -44,6 +44,11 @@
 .form-upload-img {
   width: 95%;
   margin: auto;
+  position: relative;
+}
+.preview-img {
+  width: 100%;
+  height: 100%;
 }
 .icon-del { 
   margin-left: 20rpx;
@@ -61,4 +66,20 @@
 .del-submit {
   background: red !important;
   color: #fff !important;
+}
+.painter {
+  position: absolute;
+  left: -9999rpx;
+}
+.form-upload-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 40rpx;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
 }

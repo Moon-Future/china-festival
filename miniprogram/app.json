@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/lunar/lunar",
     "pages/calendar/calendar",
     "pages/countdown/countdown",
     "pages/user/user",
