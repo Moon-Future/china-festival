@@ -190,7 +190,7 @@ Page({
         'textMap.yearNum.text': y,
         'textMap.monthNum.text': m,
         'textMap.dayNum.text': d,
-        'textMap.festival.text': result.festival || '',
+        'textMap.festival.text': result.festival || dateInfo.Term || '',
         'textMap.lunar.text': dateInfo.IMonthCn + dateInfo.IDayCn,
         sadday: result.sadday || false,
         pickerDate: y + '-' + m + 'd',

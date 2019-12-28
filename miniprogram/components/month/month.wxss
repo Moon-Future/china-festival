@@ -132,3 +132,6 @@
 .festival-color {
   color: #ffd369;
 }
+.hide-swiper {
+  background: #eee;
+}

@@ -1,0 +1,273 @@
+{
+  "month": 1,
+  "day": 1,
+  "festival": "元旦",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 28,
+  "festival": "腊八节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 23,
+  "festival": "小年(北方)",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 24,
+  "festival": "小年(南方)",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 30,
+  "festival": "除夕",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 1,
+  "day": 1,
+  "festival": "春节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 1,
+  "day": 15,
+  "festival": "元宵节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 2,
+  "day": 14,
+  "festival": "情人节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 2,
+  "day": 2,
+  "festival": "龙抬头",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 3,
+  "day": 8,
+  "festival": "妇女节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 3,
+  "day": 12,
+  "festival": "植树节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 3,
+  "day": 15,
+  "festival": "消费者权益日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 4,
+  "day": 1,
+  "festival": "愚人节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 4,
+  "day": 22,
+  "festival": "世界地球日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 5,
+  "day": 1,
+  "festival": "五一国际劳动节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 5,
+  "day": 4,
+  "festival": "中国青年节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 5,
+  "day": 12,
+  "festival": "国际护士节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 6,
+  "day": 1,
+  "festival": "国际儿童节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 6,
+  "day": 5,
+  "festival": "世界环境日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 6,
+  "day": 23,
+  "festival": "国际奥林匹克日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 5,
+  "day": 5,
+  "festival": "端午节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 7,
+  "day": 1,
+  "festival": "建党节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 8,
+  "day": 1,
+  "festival": "建军节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 7,
+  "day": 7,
+  "festival": "七夕情人节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 7,
+  "day": 15,
+  "festival": "中元节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 9,
+  "day": 3,
+  "festival": "抗日战争纪念日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 9,
+  "day": 10,
+  "festival": "教师节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 8,
+  "day": 15,
+  "festival": "中秋节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 10,
+  "day": 1,
+  "festival": "国庆节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 9,
+  "day": 9,
+  "festival": "重阳节",
+  "lunar": true,
+  "sadday": false
+}
+{
+  "month": 11,
+  "day": 1,
+  "festival": "万圣节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 11,
+  "day": 11,
+  "festival": "光棍节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 11,
+  "day": 17,
+  "festival": "国际大学生节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 11,
+  "day": 26,
+  "festival": "感恩节",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 1,
+  "festival": "世界艾滋病日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 13,
+  "festival": "国家公祭日",
+  "lunar": false,
+  "sadday": true
+}
+{
+  "month": 12,
+  "day": 20,
+  "festival": "澳门回归日",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 24,
+  "festival": "平安夜",
+  "lunar": false,
+  "sadday": false
+}
+{
+  "month": 12,
+  "day": 25,
+  "festival": "圣诞节",
+  "lunar": false,
+  "sadday": false
+}

@@ -33,6 +33,7 @@ Component({
     },
     gzDate: '',
     current: 1,
+    oricurrent: 1,
     duration: 500,
     source: true, // swiper source字段
     prevDays: [],
@@ -41,8 +42,12 @@ Component({
   },
 
   lifetimes: {
-    attached() {
+    attached: async function() {
       let self = this
+      if (!app.globalData.festivals) {
+        let { festivals } = await this.getFestivalFromDatabase()
+        app.globalData.festivals = festivals
+      }
       this.init()
       wx.cloud.callFunction({
         name: 'getUserInfo',
@@ -70,7 +75,40 @@ Component({
         m = date.getMonth() + 1
         d = date.getDate()
       }
-      this.initCalendar(y, m, d)
+      let { current, oricurrent, prevDays, days, nextDays } = this.data
+      const result = this.initCalendar(y, m, d)
+      const prevResult = this.initCalendar(y, m, d, 'prev')
+      const nextResult = this.initCalendar(y, m, d, 'next')
+      const arr = ['2-0', '1-0', '0-1', '2-1', '1-2', '0-2']
+      if (current == oricurrent) {
+        prevDays = prevResult.days
+        days = result.days
+        nextDays = nextResult.days
+      } else {
+        switch (arr.indexOf(oricurrent + '-' + current)) {
+          case 0:
+          case 1:
+            nextDays = prevResult.days
+            days = nextResult.days
+            break;
+          case 2:
+          case 3:
+            prevDays = prevResult.days
+            nextDays = nextResult.days
+            break;
+          case 4:
+          case 5:
+            days = prevResult.days
+            prevDays = nextResult.days
+            break;
+        }
+      }
+      this.setData({
+        prevDays, days, nextDays,
+        oricurrent: current,
+        infoMap: result.infoMap,
+        festival: result.festivalValue
+      })
     },
     prevMonth: function (y, m, d) {
       let newD = 1, newY, newM
@@ -125,6 +163,11 @@ Component({
           dateInfo: dateInfo,
           now
         })
+        app.globalData.date = {
+          year: y,
+          month: m,
+          day: d
+        }
       }
       let maxDay = new Date(y, m, 0).getDate(),
         weekStart = new Date(y, m - 1, 1).getDay(),
@@ -151,6 +194,7 @@ Component({
               lunarY: info.lYear,
               lunarM: info.lMonth,
               lunarD: info.lDay,
+              term: info.Term || '',
               week: info.nWeek === 7 ? 0 : info.nWeek,
               prev: true
             })
@@ -173,6 +217,7 @@ Component({
             lunarY: info.lYear,
             lunarM: info.lMonth,
             lunarD: info.lDay,
+            term: info.Term || '',
             week: info.nWeek === 7 ? 0 : info.nWeek
           };
           next ? obj.next = true : false;
@@ -183,16 +228,13 @@ Component({
         }
         days.push(arr);
       }
-      this.setData({
-        [field]: days
-      });
-      if (!flag) {
-        this.getFestival();
-      }
+      return this.getFestival(days)
     },
     selectDay(e) {
       let info = e.currentTarget.dataset.info;
-      let days = this.data.days;
+      let current = this.data.current
+      let field = current == 1 ? 'days' : (current == 0 ? 'prevDays' : 'nextDays')
+      let days = this.data[field]
       app.globalData.date = {
         year: info.year,
         month: info.month,
@@ -214,21 +256,68 @@ Component({
         }
         let now = new Date();
         this.setData({
-          days,
+          [field]: days,
           year: info.year,
           month: info.month,
           day: info.day,
           week: info.week,
-          festival: info.festival || info.lunarFestival || '',
+          festival: info.festival || info.lunarFestival || info.term || '',
           now: info.year == now.getFullYear() && info.month === now.getMonth() + 1 && info.day === now.getDate() ? true : false,
           dateInfo: calendar.solar2lunar(info.year, info.month, info.day),
           date: info.year + '-' + info.month + '-' + info.day
         });
       }
     },
-    getFestival() {
-      const self = this
-      const days = this.data.days
+    getFestivalFromDatabase: function() {
+      wx.showLoading({
+        mask: true,
+      })
+      return new Promise((resolve, reject) => {
+        wx.cloud.callFunction({
+          name: 'getFestival',
+          data: { all: true }
+        }).then(res => {
+          wx.hideLoading()
+          resolve(res.result)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    getFestivalFromGlobal: function(params) {
+      let { month, lunarMonth } = params
+      let festivalResult = [], lunarFestivalResult = []
+      let festival = {}, lunarFestival = {}
+      let festivals = app.globalData.festivals
+      for (let i = 0, len = month.length; i < len; i++) {
+        let m = month[i].split('-')[1]
+        for (let j = 0; j < festivals.length; j++) {
+          let item = festivals[j]
+          if (item.month == m && !item.lunar) {
+            festivalResult.push(item)
+          }
+        }
+      } 
+      for (let i = 0, len = lunarMonth.length; i < len; i++) {
+        let m = lunarMonth[i].split('-')[1]
+        for (let j = 0; j < festivals.length; j++) {
+          let item = festivals[j]
+          if (item.month == m && item.lunar) {
+            lunarFestivalResult.push(item)
+          }
+        }
+      }
+      festivalResult.forEach(item => {
+        festival[item.month + '-' + item.day] = item;
+      })
+      lunarFestivalResult.forEach(item => {
+        lunarFestival[item.month + '-' + item.day] = item;
+      })
+      return {
+        festival, lunarFestival
+      }
+    },
+    getFestival(days) {
       let month = [], lunarMonth = [];
       let now = new Date();
       let infoMap = {};
@@ -244,53 +333,85 @@ Component({
           }
         }
       }
-      wx.showLoading({
-        mask: true
-      })
-      wx.cloud.callFunction({
-        name: 'getFestival',
-        data: {
-          month,
-          lunarMonth
-        }
-      }).then(res => {
-        let { festival, lunarFestival } = res.result;
-        for (let i = 0, len = days.length; i < len; i++) {
-          var arr = days[i];
-          for (let j = 0; j < arr.length; j++) {
-            let item = arr[j];
-            if (festival[item.month + '-' + item.day]) {
-              item.festival = festival[item.month + '-' + item.day].festival;
-            }
-            if (lunarFestival[item.month + '-' + item.day]) {
-              item.lunarFestival = lunarFestival[item.month + '-' + item.day].festival;
-            }
-            infoMap[item.year + '-' + item.month + '-' + item.day] = item;
+      let { festival, lunarFestival } = this.getFestivalFromGlobal({ month, lunarMonth });
+      let data = this.data
+      let festivalValue
+      for (let i = 0, len = days.length; i < len; i++) {
+        var arr = days[i];
+        for (let j = 0; j < arr.length; j++) {
+          let item = arr[j];
+          if (festival[item.month + '-' + item.day]) {
+            item.festival = festival[item.month + '-' + item.day].festival;
+          }
+          if (lunarFestival[item.lunarM + '-' + item.lunarD]) {
+            item.lunarFestival = lunarFestival[item.lunarM + '-' + item.lunarD].festival;
+          }
+          infoMap[item.year + '-' + (item.month < 10 ? '0' + item.month : item.month) + '-' + (item.day < 10 ? '0' + item.day : item.day)] = item;
+          if (item.year == data.year && item.month == data.month && item.day == data.day) {
+            festivalValue = item.festival || item.lunarFestival || item.term
           }
         }
-        self.setData({
-          days: days,
-          infoMap: infoMap
-        });
-
-        let y = this.data.year
-        let m = this.data.month
-        let d = this.data.day
-        self.initCalendar(y, m, d, 'prev')
-        self.initCalendar(y, m, d, 'next')
-        wx.hideLoading()
-      }).catch(err => {
-        wx.showToast({
-          title: '网络拥堵，请稍后重试',
-          duration: 100,
-          mask: true
-        })
-      })
-      app.globalData.date = {
-        year: this.data.year,
-        month: this.data.month,
-        day: this.data.day
       }
+      return { days, infoMap, festivalValue }
+      // this.setData({
+      //   days: days
+      // })
+      // // 当前月
+      // if (!flag) {
+      //   this.setData({
+      //     infoMap: infoMap,
+      //     festival: festivalValue
+      //   })
+      // }
+
+      // wx.showLoading({
+      //   mask: true
+      // })
+      // wx.cloud.callFunction({
+      //   name: 'getFestival',
+      //   data: {
+      //     month,
+      //     lunarMonth
+      //   }
+      // }).then(res => {
+      //   let { festival, lunarFestival } = res.result;
+      //   let data = self.data
+      //   let festivalValue
+      //   for (let i = 0, len = days.length; i < len; i++) {
+      //     var arr = days[i];
+      //     for (let j = 0; j < arr.length; j++) {
+      //       let item = arr[j];
+      //       if (festival[item.month + '-' + item.day]) {
+      //         item.festival = festival[item.month + '-' + item.day].festival;
+      //       }
+      //       if (lunarFestival[item.lunarM + '-' + item.lunarD]) {
+      //         item.lunarFestival = lunarFestival[item.lunarM + '-' + item.lunarD].festival;
+      //       }
+      //       infoMap[item.year + '-' + item.month + '-' + item.day] = item;
+      //       if (item.year == data.year && item.month == data.month && item.day == data.day) {
+      //         festivalValue = item.festival || item.lunarFestival || item.term
+      //       }
+      //     }
+      //   }
+      //   self.setData({
+      //     days: days,
+      //     infoMap: infoMap,
+      //     festival: festivalValue
+      //   });
+
+      //   let y = this.data.year
+      //   let m = this.data.month
+      //   let d = this.data.day
+      //   self.initCalendar(y, m, d, 'prev')
+      //   self.initCalendar(y, m, d, 'next')
+      //   wx.hideLoading()
+      // }).catch(err => {
+      //   wx.showToast({
+      //     title: '网络拥堵，请稍后重试',
+      //     duration: 100,
+      //     mask: true
+      //   })
+      // })
     },
     bindDateChange(e) {
       let [year, month, day] = e.detail.value.split('-');
@@ -341,50 +462,31 @@ Component({
       }
     },
     changeTab(e) {
-      if (e.detail.source == '') {
-        this.setData({
-          animationfinishFlag: false,
-        })
-        return
-      }
       this.setData({
-        current: e.detail.current,
-        animationfinishFlag: true
+        current: e.detail.current
       })
     },
     animationfinish() {
-      let self = this
-      if (!this.data.animationfinishFlag) {
+      let { current, oricurrent, year, month, day } = this.data
+      if (current == oricurrent) {
         return
       }
-      const { year, month, day } = this.data
-      if (this.data.current == 0) {
+      let left = false
+      const arr = ['2-0', '1-0', '0-1', '2-1', '1-2', '0-2']
+      switch (arr.indexOf(oricurrent + '-' + current)) {
+        case 0:
+        case 2:
+        case 4:
+          left = true;
+          break;
+      }
+      if (left) { // 左滑
+        let { y, m, d } = this.nextMonth(year, month, day)
+        this.init(y, m, d)
+      } else { // 右滑
         let { y, m, d } = this.prevMonth(year, month, day)
         this.init(y, m, d);
-      } else {
-        let { y, m, d } = this.nextMonth(year, month, day)
-        this.init(y, m, d);
       }
-      this.setData({
-        source: false,
-        duration: 0
-      })
-      setTimeout(function() {
-        self.setData({
-          current: 1,
-          animationfinishFlag: false,
-        })
-      }, 100)
-    },
-    transition() {
-      let duration = 500
-      if (!this.data.source) {
-        duration = 0
-      }
-      this.setData({
-        duration,
-        source: true
-      })
     }
   }
 })

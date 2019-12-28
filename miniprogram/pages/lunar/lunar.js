@@ -6,20 +6,15 @@ Page({
    */
   data: {
     lunarDate: '2020-01-01',
-    lunarInfo: {},
-    yangDate: '2020-01-25',
-    yangInfo: {}
+    solarDate: '2020-01-25',
+    dateinfo: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let [lunarY, lunarM, lunarD] = this.data.lunarDate.split('-')
-    let lunarInfo = calendar.lunar2solar(lunarY, lunarM, lunarD)
-    let [yangY, yangM, yangD] = this.data.yangDate.split('-')
-    let yangInfo = calendar.solar2lunar(yangY, yangM, yangD)
-    console.log(lunarInfo, yangInfo)
+    this.solar2lunar(this.data.solarDate, true)
   },
 
   /**
@@ -50,24 +45,27 @@ Page({
 
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
+  solar2lunar: function(date, flag) {
+    let [y, m, d] = date.split('-')
+    let dateInfo, solarDate, lunarDate
+    if (flag) {
+      dateInfo = calendar.solar2lunar(y, m, d)
+    } else {
+      dateInfo = calendar.lunar2solar(y, m, d)
+    }
+    this.setData({
+      lunarDate: dateInfo.lunarDate,
+      solarDate: dateInfo.date,
+      dateInfo: dateInfo
+    })
+    console.log(dateInfo)
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
+  solarDateChange: function(e) {
+    this.solar2lunar(e.detail.value, true)
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  lunarDateChange: function (e) {
+    this.solar2lunar(e.detail.value, false)
   }
 })

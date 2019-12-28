@@ -28,7 +28,12 @@ exports.main = async (event, context) => {
       return { status: 0, message: '请先登录' }
     }
   } else {
-    if (!event.one) { //  日历
+    if (event.all) { // 获取全部节日 缓存到前端
+      const result = await festivalCollection.where({}).get()
+      return {
+        festivals: result.data
+      }
+    } else if (!event.one) { //  日历
       let { month, lunarMonth } = event
       let conditionArr = [], conditionLunarArr = []
       month.forEach(item => {

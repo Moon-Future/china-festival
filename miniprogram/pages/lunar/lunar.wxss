@@ -1,3 +1,17 @@
+.lunar-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-image: url('https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/logo/solar2lunar.jpg');
+  color: #fff;
+  font-size: 50rpx;
+  font-weight: bold;
+}
 .form-item {
   height: 80rpx;
   line-height: 80rpx;
@@ -7,5 +21,27 @@
   color: #8785a2;
 }
 .form-inp {
-  background: #fff;
+  background: #ddd;
+  color: #eb8242;
+}
+.date-detail {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.date-detail-item {
+  padding: 20rpx;
+  /* color: #fff; */
+}
+.date-detail-day {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 20rpx;
+  background: #fb0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 2px 5px rgba(0,0,0,.1), -1px 2px 5px rgba(0,0,0,.1);
+  font-size: 80rox;
 }
