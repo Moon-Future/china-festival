@@ -93,7 +93,7 @@
 .day {
   display: flex;
   flex-flow: column;
-  height: 650rpx;
+  height: 700rpx;
 }
 .day-row {
   display: flex;
@@ -105,6 +105,9 @@
   padding: 10rpx;
   text-align: center;
   border-radius: 4px;
+}
+.week-item-rest {
+  color: red;
 }
 .day-col {
   display: flex;
@@ -123,11 +126,11 @@
 }
 .day-col-lunar {
   width: 100%;
-  font-size: 22rpx;
+  font-size: 20rpx;
   font-weight: initial;
-  overflow: hidden;
+  /* overflow: hidden;
   text-overflow:ellipsis;
-  white-space: nowrap;
+  white-space: nowrap; */
 }
 .festival-color {
   color: #ffd369;

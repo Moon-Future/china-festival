@@ -14,6 +14,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let date = new Date()
+    this.setData({
+      solarDate: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    })
     this.solar2lunar(this.data.solarDate, true)
   },
 

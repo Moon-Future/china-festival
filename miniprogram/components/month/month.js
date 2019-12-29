@@ -21,7 +21,7 @@ Component({
     week: 0,
     now: true,
     festival: '',
-    weeks: ['日', '一', '二', '三', '四', '五', '六'],
+    weeks: ['一', '二', '三', '四', '五', '六', '日'],
     days: [],
     dateInfo: {},
     date: '',
@@ -81,9 +81,24 @@ Component({
       const nextResult = this.initCalendar(y, m, d, 'next')
       const arr = ['2-0', '1-0', '0-1', '2-1', '1-2', '0-2']
       if (current == oricurrent) {
-        prevDays = prevResult.days
-        days = result.days
-        nextDays = nextResult.days
+        // 下拉选择时间，current没变
+        switch(current) {
+          case 0:
+            prevDays = result.days
+            days = nextResult.days
+            nextDays = prevResult.days
+            break;
+          case 1:
+            prevDays = prevResult.days
+            days = result.days
+            nextDays = nextResult.days
+            break;
+          case 2:
+            prevDays = result.days
+            days = prevResult.days
+            nextDays = result.days
+            break;
+        }
       } else {
         switch (arr.indexOf(oricurrent + '-' + current)) {
           case 0:
@@ -111,7 +126,7 @@ Component({
       })
     },
     prevMonth: function (y, m, d) {
-      let newD = 1, newY, newM
+      let newD = this.data.day, newY, newM
       if (m == 1) {
         newY = y - 1
         newM = 12
@@ -119,10 +134,11 @@ Component({
         newY = y
         newM = m - 1
       }
+      newD = Math.min(newD, calendar.solarDays(newY, newM))
       return { y: newY, m: newM, d: newD }
     },
     nextMonth: function(y, m, d) {
-      let newD = 1, newY, newM
+      let newD = this.data.day, newY, newM
       if (m == 12) {
         newY = y + 1
         newM = 1
@@ -130,6 +146,7 @@ Component({
         newY = y
         newM = m + 1
       }
+      newD = Math.min(newD, calendar.solarDays(newY, newM))
       return { y: newY, m: newM, d: newD }
     },
     // flag 是否计算前后各一月
@@ -175,6 +192,7 @@ Component({
         days = [], arr = [], dayStart = 0,
         len = Math.ceil(maxDay / 7),
         year, month, next = null, obj = {}, info = {};
+      weekStart = weekStart == 0 ? 6 : weekStart - 1;
       for (let i = 0; i <= len; i++) {
         if (next) {
           break;
@@ -182,27 +200,33 @@ Component({
         arr = [];
         if (i === 0) {
           let prevLen = weekStart === 0 ? 7 : weekStart
-          for (let j = prevLen - 1; j >= 0; j--) {
-            year = m === 1 ? y - 1 : y;
-            month = m === 1 ? 12 : m - 1;
-            info = calendar.solar2lunar(year, month, prevEnd - j);
-            arr.push({
-              year,
-              month,
-              day: prevEnd - j,
-              lunar: info.IDayCn,
-              lunarY: info.lYear,
-              lunarM: info.lMonth,
-              lunarD: info.lDay,
-              term: info.Term || '',
-              week: info.nWeek === 7 ? 0 : info.nWeek,
-              prev: true
-            })
+          if (prevLen != 7) {
+            for (let j = prevLen - 1; j >= 0; j--) {
+              year = m === 1 ? y - 1 : y;
+              month = m === 1 ? 12 : m - 1;
+              info = calendar.solar2lunar(year, month, prevEnd - j);
+              arr.push({
+                year,
+                month,
+                day: prevEnd - j,
+                lunar: info.IDayCn,
+                lunarY: info.lYear,
+                lunarM: info.lMonth,
+                lunarD: info.lDay,
+                term: info.Term || '',
+                week: info.nWeek === 7 ? 0 : info.nWeek,
+                prev: true
+              })
+            }
           }
         }
         for (let j = arr.length; j < 7; j++) {
           dayStart += 1;
           if (dayStart > maxDay) {
+            // 如果arr为空，则全为下一个月了
+            if (arr.length === 0) {
+              break;
+            }
             dayStart = 1;
             next = true;
           }
@@ -221,9 +245,9 @@ Component({
             week: info.nWeek === 7 ? 0 : info.nWeek
           };
           next ? obj.next = true : false;
-          if (month === m && dayStart === d) {
-            obj.active = true;
-          }
+          // if (month === m && dayStart === d) {
+          //   obj.active = true;
+          // }
           arr.push(obj);
         }
         days.push(arr);
@@ -243,17 +267,17 @@ Component({
       if (info.year !== this.data.year || info.month !== this.data.month) {
         this.init(info.year, info.month, info.day);
       } else {
-        for (let i = 0, len = days.length; i < len; i++) {
-          var arr = days[i];
-          for (let j = 0; j < arr.length; j++) {
-            let item = arr[j];
-            if (item.year === info.year && item.month === info.month && item.day === info.day) {
-              item.active = true;
-            } else {
-              delete item.active;
-            }
-          }
-        }
+        // for (let i = 0, len = days.length; i < len; i++) {
+        //   var arr = days[i];
+        //   for (let j = 0; j < arr.length; j++) {
+        //     let item = arr[j];
+        //     if (item.year === info.year && item.month === info.month && item.day === info.day) {
+        //       item.active = true;
+        //     } else {
+        //       delete item.active;
+        //     }
+        //   }
+        // }
         let now = new Date();
         this.setData({
           [field]: days,
