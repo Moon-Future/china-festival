@@ -193,7 +193,7 @@ Page({
         'textMap.festival.text': result.festival || dateInfo.Term || '',
         'textMap.lunar.text': dateInfo.IMonthCn + dateInfo.IDayCn,
         sadday: result.sadday || false,
-        pickerDate: y + '-' + m + 'd',
+        pickerDate: y + '-' + m + '-' + d,
         loading: false,
         background: data.bgUrl + (result.background && result.background[0] || data.bgDefault),
         color: result.color || data.colorDefault

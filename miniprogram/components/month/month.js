@@ -94,7 +94,7 @@ Component({
             nextDays = nextResult.days
             break;
           case 2:
-            prevDays = result.days
+            prevDays = nextResult.days
             days = prevResult.days
             nextDays = result.days
             break;
@@ -122,7 +122,8 @@ Component({
         prevDays, days, nextDays,
         oricurrent: current,
         infoMap: result.infoMap,
-        festival: result.festivalValue
+        festival: result.festivalValue,
+        date: y + '-' + m + '-' + d
       })
     },
     prevMonth: function (y, m, d) {
