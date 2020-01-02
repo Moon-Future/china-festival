@@ -28,14 +28,14 @@ exports.main = async (event, context) => {
         content: event.remark
       })
       const data = {
-        festival: event.festival,
+        festival: event.festival.substr(0, 20),
         year: event.date.split('-')[0],
         month: event.date.split('-')[1],
         day: event.date.split('-')[2],
         lunar: false,
         background: [event.background],
         color: event.color,
-        remark: event.remark,
+        remark: event.remark.substr(0, 100),
         user: openid
       }
       if (id) {

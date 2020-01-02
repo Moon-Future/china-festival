@@ -1,0 +1,58 @@
+@import "../../style/iconfont.wxss";
+.cp-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.cp-wrapper {
+  position: fixed;
+  z-index: 2000;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  animation: toUp 0.5s;
+}
+.cp-handle {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx;
+  font-size: 35rpx;
+}
+.cp-handle-cancel {
+  color: gainsboro;
+}
+.cp-handle-ok {
+  color: rgb(54, 223, 3);
+}
+.color-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20rpx;
+  background: #8785a2;
+  height: 100%;
+}
+.color-item {
+  width: 50rpx;
+  height: 50rpx;
+  border: 1px solid;
+  border-radius: 4px;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.color-item-active {
+  border-color: red;
+}
+
+@keyframes toUp
+{
+  from {bottom: -300rpx;}
+  to {bottom: 0;}
+}

@@ -8,15 +8,15 @@
 </view>
 <view class="countdown-wrapper">
   <view class="time-wrapper">
-    <view>
-      <text>今日 </text>
+    <view class="color-box-wrapper">
+      <view class="color-box" style="background:{{color}}" bindtap="showCp"><text class="iconfont icon-selected"></text></view>
       <text>{{today}}</text>
     </view>
     <view>
       <text class="iconfont icon-share" bindtap="share"></text>
     </view>
     <picker class="picker-wrapper" mode="date" value="{{pickerDate}}" start="1900-1-1" end="2100-12-31" bindchange="bindDateChange">
-       <text>{{textMap.yearNum.text}} 年 {{textMap.monthNum.text}} 月 {{textMap.dayNum.text}}日</text>
+       <text>{{textMap.yearNum.text}}年{{textMap.monthNum.text}}月{{textMap.dayNum.text}}日</text>
     </picker>
   </view>
   <view class="countdown-card {{sadday ? 'moai' : ''}}" style="background-image:url({{background}});color:{{color}}">
@@ -81,4 +81,7 @@
     </view>
   </view>
   <navbar activeIndex="1"></navbar>
+</view>
+<view hidden="{{!cpShow}}">
+  <colorPicker bind:selectColor="selectColor" bind:okColor="okColor" color="{{color}}" oriColor="{{oriColor}}"></colorPicker>
 </view>

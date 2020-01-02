@@ -13,8 +13,9 @@ Page({
     bgUrl: 'https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/countdown/',
     background: '',
     bgDefault: 'default.jpg',
-    color: '',
-    colorDefault: '#fff',
+    color: '#ffffff',
+    oriColor: '#ffffff',
+    colorDefault: '#ffffff',
     loading: false,
     past: false,
     sadday: false,
@@ -46,7 +47,8 @@ Page({
       { text: '保存图片' }
     ],
     dialogShow: false,
-    widthPixels: 300
+    widthPixels: 300,
+    cpShow: false
   },
 
   /**
@@ -323,6 +325,23 @@ Page({
   cancelImg: function() {
     this.setData({
       dialogShow: false
+    })
+  },
+  showCp: function() {
+    this.setData({
+      cpShow: true
+    })
+  },
+  selectColor: function(res) {
+    this.setData({
+      color: res.detail.color
+    })
+  },
+  okColor: function (res) {
+    this.setData({
+      color: res.detail.color,
+      oriColor: res.detail.oriColor,
+      cpShow: false
     })
   }
 })

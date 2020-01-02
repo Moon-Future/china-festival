@@ -1,18 +1,18 @@
 <view>
   <text class="form-item form-title">节日</text>
-  <input class="form-item form-inp" value="{{festival}}" placeholder="节日名称" data-field="festival" bindinput="formInput"></input>
+  <input class="form-item form-inp" maxlength="20" value="{{festival}}" placeholder="节日名称" data-field="festival" bindinput="formInput"></input>
   <text class="form-item form-title">时间</text>
   <picker class="picker-wrapper" mode="date" value="{{date}}" start="1900-1-1" end="2100-12-31" bindchange="bindDateChange">
       <input class="form-item form-inp" value="{{date}}" disabled="true" placeholder="节日时间"></input>
   </picker>
   <text class="form-item form-title">备注</text>
   <textarea class="form-item form-textarea" maxlength="100" value="{{remark}}" data-field="remark" bindinput="formInput"></textarea>
-  <text class="form-item form-title">字体颜色</text>
+  <!-- <text class="form-item form-title">字体颜色</text>
   <view class="color-wrapper">
     <view class="color-item {{colorActive === index ? 'color-item-active' : ''}}" wx:for="{{colors}}" wx:key="index" style="background:{{item}};border-color:{{item}}" data-index="{{index}}" bindtap="selectColor">
       <text class="iconfont icon-selected" wx:if="{{colorActive === index}}"></text>
     </view>
-  </view>
+  </view> -->
   <view class="form-item form-title">
     <text>背景</text>
     <text class="iconfont icon-del" hidden="{{!imgShow}}" bindtap="delImg"></text>

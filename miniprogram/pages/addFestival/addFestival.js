@@ -355,9 +355,9 @@ Page({
     let self = this
     let data = this.data
     let subData = {
-      festival: data.festival,
+      festival: data.festival.substr(0, 20),
       date: data.date,
-      remark: data.remark,
+      remark: data.remark.substr(0, 100),
       color: data.colors[data.colorActive],
       background: data.background,
       id: data.id

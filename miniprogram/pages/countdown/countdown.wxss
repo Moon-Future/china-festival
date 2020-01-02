@@ -65,6 +65,20 @@
   font-size: 80rpx;
   color: #e04dff;
 }
+.color-box-wrapper {
+  display: flex;
+  align-items: center;
+}
+.color-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 4rpx;
+  background: #fff;
+  margin-right: 10rpx;
+}
 .countdown-card {
   width: 95%;
   margin: auto;

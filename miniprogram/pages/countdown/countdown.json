@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "navbar": "/components/navbar/navbar",
-    "painter": "/components/painter/painter"
+    "painter": "/components/painter/painter",
+    "colorPicker": "/components/colorPicker/colorPicker"
   },
   "navigationBarTitleText": "倒计时"
 }

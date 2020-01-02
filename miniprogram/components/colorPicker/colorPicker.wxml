@@ -1,0 +1,12 @@
+<view class="cp-mask" bindtap="cancel"></view>
+<view class="cp-wrapper">
+  <view class="cp-handle">
+    <text class="cp-handle-cancel" bindtap="cancel">取消</text>
+    <text class="cp-handle-ok" bindtap="ok">确认</text>
+  </view>
+  <view class="color-list">
+    <view class="color-item {{colorActive === index ? 'color-item-active' : ''}}" wx:for="{{colors}}" wx:key="index" style="background:{{item}};border-color:{{item}}" data-index="{{index}}" bindtap="selectColor">
+      <text class="iconfont icon-selected" wx:if="{{colorActive === index}}"></text>
+    </view>
+  </view>
+</view>
