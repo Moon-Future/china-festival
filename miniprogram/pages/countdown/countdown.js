@@ -55,13 +55,13 @@ Page({
   onLoad: async function (options) {
     const self = this;
     if (!options.year) {
-      options = app.globalData.date || {year: 2020, month: 1, day: 1}
+      options = app.globalData.date || {year: '2020', month: '01', day: '01'}
     }
     let { year, month, day, id } = options;
     this.setData({
       'textMap.yearNum.text': year,
-      'textMap.monthNum.text': month,
-      'textMap.dayNum.text': day,
+      'textMap.monthNum.text': self.doubleStr(month),
+      'textMap.dayNum.text': self.doubleStr(day),
       query: wx.createSelectorQuery(),
       id: id || ''
     })
@@ -130,6 +130,11 @@ Page({
 
   },
 
+  doubleStr: function(val) {
+    val = (val + '').length == 1 ? ('0' + val) : val;
+    return val
+  },
+
   countdown: function() {
     const self = this;
     clearInterval(timer);
@@ -143,7 +148,7 @@ Page({
     let today = new Date(), now = today.getTime();
     this.setData({
       past: Date.now() - dateStamp > 0 ? true : false,
-      today: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+      today: today.getFullYear() + '-' + self.doubleStr((today.getMonth() + 1)) + '-' + self.doubleStr(today.getDate())
     });
     timer = setInterval(function () {
       let now = Date.now(),
@@ -152,15 +157,11 @@ Page({
         hour = Math.floor(diff % oneDay / oneHour),
         mins = Math.floor(diff % oneDay % oneHour / oneMins),
         sec = Math.floor(diff % oneDay % oneHour % oneMins / oneSec);
-      day = (day + '').length === 1 ? '0' + day : day;
-      hour = (hour + '').length === 1 ? '0' + hour : hour;
-      mins = (mins + '').length === 1 ? '0' + mins : mins;
-      sec = (sec + '').length === 1 ? '0' + sec : sec;
       self.setData({
-        'textMap.restDayNum.text': day,
-        'textMap.restHourNum.text': hour,
-        'textMap.restMinsNum.text': mins,
-        'textMap.restSecNum.text': sec
+        'textMap.restDayNum.text': self.doubleStr(day),
+        'textMap.restHourNum.text': self.doubleStr(hour),
+        'textMap.restMinsNum.text': self.doubleStr(mins),
+        'textMap.restSecNum.text': self.doubleStr(sec)
       });
     }, 1000);
   },
@@ -188,8 +189,8 @@ Page({
       wx.hideLoading()
       self.setData({
         'textMap.yearNum.text': y,
-        'textMap.monthNum.text': m,
-        'textMap.dayNum.text': d,
+        'textMap.monthNum.text': self.doubleStr(m),
+        'textMap.dayNum.text': self.doubleStr(d),
         'textMap.festival.text': result.festival || dateInfo.Term || '',
         'textMap.lunar.text': dateInfo.IMonthCn + dateInfo.IDayCn,
         sadday: result.sadday || false,

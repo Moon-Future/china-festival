@@ -2,5 +2,6 @@
   "usingComponents": {
     "navbar": "/components/navbar/navbar",
     "painter": "/components/painter/painter"
-  }
+  },
+  "navigationBarTitleText": "倒计时"
 }
