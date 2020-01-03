@@ -9,6 +9,9 @@ Page({
    */
   data: {
     today: '2020-01-01',
+    ty: '2020',
+    tm: '01',
+    td: '01',
     pickerDate: '',
     bgUrl: 'https://chinafestival-1255423800.cos.ap-guangzhou.myqcloud.com/countdown/',
     background: '',
@@ -150,7 +153,10 @@ Page({
     let today = new Date(), now = today.getTime();
     this.setData({
       past: Date.now() - dateStamp > 0 ? true : false,
-      today: today.getFullYear() + '-' + self.doubleStr((today.getMonth() + 1)) + '-' + self.doubleStr(today.getDate())
+      today: today.getFullYear() + '-' + self.doubleStr((today.getMonth() + 1)) + '-' + self.doubleStr(today.getDate()),
+      ty: today.getFullYear(),
+      tm: self.doubleStr((today.getMonth() + 1)),
+      td: self.doubleStr(today.getDate())
     });
     timer = setInterval(function () {
       let now = Date.now(),

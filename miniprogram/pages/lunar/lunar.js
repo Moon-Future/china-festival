@@ -62,7 +62,6 @@ Page({
       solarDate: dateInfo.date,
       dateInfo: dateInfo
     })
-    console.log(dateInfo)
   },
 
   solarDateChange: function(e) {

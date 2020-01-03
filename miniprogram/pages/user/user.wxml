@@ -9,5 +9,5 @@
   <navigator class="user-item" url="/pages/lunar/lunar">
     <text>农历公历互转</text>
   </navigator>
-  <navbar activeIndex="3"></navbar>
+  <navbar activeIndex="2"></navbar>
 </view>

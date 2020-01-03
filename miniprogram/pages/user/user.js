@@ -137,7 +137,7 @@ Page({
         sessionKey
       }
     }).then(res => {
-      console.log('res', res)
+      // console.log('res', res)
     }).catch(err => {
 
     })

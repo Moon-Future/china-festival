@@ -37,12 +37,12 @@
     <view class="festival-wrapper" hidden="{{date.festival === ''}}">
       <text class="canvas-item" data-key="festival" data-size="120">{{textMap.festival.text}}</text>
     </view>
-    <view class="past-str">
+    <view class="past-str" wx:if="{{ty != textMap.yearNum.text || tm != textMap.monthNum.text || td != textMap.dayNum.text}}">
       <text class="canvas-item" data-key="{{past ? 'str3' : 'str2'}}">{{past ? textMap.str3.text : textMap.str2.text}}</text>
       <text class="canvas-item {{numberFlag ? 'number' : ''}} restday-num" data-key="restDayNum" data-num="true">{{textMap.restDayNum.text}}</text>
       <text class="canvas-item restday-text" data-key="restDay">{{textMap.restDay.text}}</text>
     </view>
-    <view class="countdown">
+    <view class="countdown" wx:if="{{ty != textMap.yearNum.text || tm != textMap.monthNum.text || td != textMap.dayNum.text}}">
       <!-- <view class="countdown-item">
         <view class="{{numberFlag ? 'number' : ''}}">
           <text class="canvas-item" data-key="restDayNum" data-num="true">{{textMap.restDayNum.text}}</text>
