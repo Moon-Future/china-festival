@@ -105,6 +105,7 @@
   padding: 10rpx;
   text-align: center;
   border-radius: 4px;
+  position: relative;
 }
 .week-item-rest {
   color: red;
@@ -116,10 +117,6 @@
 }
 .day-col-festival {
   color: red;
-}
-.day-col-active {
-  background: #da5651;
-  color: #fff;
 }
 .other-month {
   color: #c9d1d3;
@@ -137,4 +134,27 @@
 }
 .hide-swiper {
   background: #eee;
+}
+.holidays {
+  background: #eee;
+}
+.holiday-text, .workday-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 25rpx;
+  background: #da5651;
+  color: #fff;
+  padding: 0 2rpx;
+}
+.workday-text {
+  background: rgb(170, 168, 168);
+}
+.day-col-active {
+  background: #da5651;
+  color: #fff;
+}
+.plan-wrapper {
+  display: flex;
+  flex-flow: column;
 }

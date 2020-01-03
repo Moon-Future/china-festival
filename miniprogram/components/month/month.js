@@ -38,12 +38,16 @@ Component({
     source: true, // swiper source字段
     prevDays: [],
     nextDays: [],
-    itemShow: false
+    itemShow: false,
+    holidays: {},
+    workdays: {},
+    holidayPlan: {},
+    swiperHieght: 300
   },
 
   lifetimes: {
     attached: async function() {
-      let self = this
+      const self = this
       if (!app.globalData.festivals) {
         let { festivals } = await this.getFestivalFromDatabase()
         app.globalData.festivals = festivals
@@ -61,6 +65,9 @@ Component({
       }).catch(err => {
 
       })
+    },
+    ready: async function() {
+      
     }
   },
 
@@ -68,7 +75,15 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    init: function(y, m, d) {
+    clientRect: function (query) {
+      const self = this
+      return new Promise(function (resolve, reject) {
+        wx.createSelectorQuery().in(self).selectAll(query).boundingClientRect(function (rects) {
+          resolve(rects)
+        }).exec()
+      })
+    },
+    init: async function(y, m, d) {
       if (!y) {
         let date = new Date();
         y = date.getFullYear()
@@ -76,6 +91,7 @@ Component({
         d = date.getDate()
       }
       let { current, oricurrent, prevDays, days, nextDays } = this.data
+      await this.getHolidaysFromDatabase(y)
       const result = this.initCalendar(y, m, d)
       const prevResult = this.initCalendar(y, m, d, 'prev')
       const nextResult = this.initCalendar(y, m, d, 'next')
@@ -124,6 +140,11 @@ Component({
         infoMap: result.infoMap,
         festival: result.festivalValue,
         date: y + '-' + m + '-' + d
+      })
+      let dayCol = (await this.clientRect('.day-row'))[0]
+      let len = current == 0 ? prevDays.length : (current == 1 ? days.length : nextDays.length)
+      this.setData({
+        swiperHieght: len * dayCol.height + 10 * (len - 1)
       })
     },
     prevMonth: function (y, m, d) {
@@ -251,7 +272,9 @@ Component({
           // }
           arr.push(obj);
         }
-        days.push(arr);
+        if (arr.length !== 0) {
+          days.push(arr);
+        }
       }
       return this.getFestival(days)
     },
@@ -308,6 +331,50 @@ Component({
           reject(err)
         })
       })
+    },
+    getHolidaysFromDatabase: function(year) {
+      if (app.globalData.holidays && app.globalData.holidays[year]) {
+        this.setData({
+          holidays: app.globalData.holidays[year].holidays,
+          workdays: app.globalData.holidays[year].workdays,
+          holidayPlan: app.globalData.holidays[year].holidayPlan
+        })
+        return
+      } else {
+        const self = this
+        return new Promise((resolve, reject) => {
+          wx.cloud.callFunction({
+            name: 'getHolidays',
+            data: { year: year + '' }
+          }).then(res => {
+            const data = res.result
+            let holidays = {}, workdays = {}, holidayPlan = {}
+            for (let i = 0; i < data.length; i++) {
+              let days = data[i].day, plan = data[i].plan
+              if (data[i].work) {
+                for (let j = 0; j < days.length; j++) {
+                  workdays[Number(days[j].split('-')[0]) + '-' + Number(days[j].split('-')[1])] = true
+                }
+              } else {
+                for (let j = 0; j < days.length; j++) {
+                  holidays[Number(days[j].split('-')[0]) + '-' + Number(days[j].split('-')[1])] = true
+                  if (j === 0) {
+                    holidayPlan[(Number(days[j].split('-')[0]) + '-' + Number(days[j].split('-')[1]))] = plan
+                  }
+                }
+              }
+            }
+            self.setData({
+              holidays, workdays, holidayPlan
+            })
+            app.globalData.holidays = {}
+            app.globalData.holidays[year] = { holidays, workdays, holidayPlan }
+            resolve(true)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      }
     },
     getFestivalFromGlobal: function(params) {
       let { month, lunarMonth } = params
@@ -489,6 +556,9 @@ Component({
     changeTab(e) {
       this.setData({
         current: e.detail.current
+      })
+      this.setData({
+        swiperHieght: 500
       })
     },
     animationfinish() {
