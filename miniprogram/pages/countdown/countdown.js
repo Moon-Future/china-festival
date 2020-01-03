@@ -149,8 +149,9 @@ Page({
       oneDay = 24 * oneHour;
     let date = this.data.date;
     let textMap = this.data.textMap
-    let dateStamp = new Date(textMap.yearNum.text + '-' + textMap.monthNum.text + '-' + textMap.dayNum.text).getTime();
-    let today = new Date(), now = today.getTime();
+    let time = textMap.yearNum.text + '-' + textMap.monthNum.text + '-' + textMap.dayNum.text
+    let dateStamp = new Date(new Date(time).toLocaleDateString()).getTime();
+    let today = new Date();
     this.setData({
       past: Date.now() - dateStamp > 0 ? true : false,
       today: today.getFullYear() + '-' + self.doubleStr((today.getMonth() + 1)) + '-' + self.doubleStr(today.getDate()),
@@ -158,6 +159,9 @@ Page({
       tm: self.doubleStr((today.getMonth() + 1)),
       td: self.doubleStr(today.getDate())
     });
+    if (dateStamp < Date.now()) {
+      dateStamp += 24 * 60 * 60 * 1000 - 1
+    }
     timer = setInterval(function () {
       let now = Date.now(),
         diff = Math.abs(dateStamp - now),
