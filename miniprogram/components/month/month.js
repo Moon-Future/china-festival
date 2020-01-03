@@ -83,6 +83,10 @@ Component({
         }).exec()
       })
     },
+    doubleStr: function (val) {
+      val = (val + '').length == 1 ? ('0' + val) : val;
+      return val
+    },
     init: async function(y, m, d) {
       if (!y) {
         let date = new Date();
@@ -90,6 +94,21 @@ Component({
         m = date.getMonth() + 1
         d = date.getDate()
       }
+
+      let date = new Date(y + '-' + this.doubleStr(m) + '-' + this.doubleStr(d));
+      let w = date.getDay();
+      let dateInfo = calendar.solar2lunar(y, m, d);
+      let today = new Date();
+      let now = today.getFullYear() === y && (today.getMonth() + 1) === m && today.getDate() === d ? true : false;
+      this.setData({
+        year: y,
+        month: m,
+        day: d,
+        week: w == 0 ? 6 : w - 1,
+        dateInfo: dateInfo,
+        now
+      })
+      
       let { current, oricurrent, prevDays, days, nextDays } = this.data
       await this.getHolidaysFromDatabase(y)
       const result = this.initCalendar(y, m, d)
@@ -188,7 +207,7 @@ Component({
         d = nextResult.d
       }
 
-      let date = new Date(y + '-' + m + '-' + d);
+      let date = new Date(y + '-' + this.doubleStr(m) + '-' + this.doubleStr(d));
       let w = date.getDay();
       let dateInfo = calendar.solar2lunar(y, m, d);
       let today = new Date();
@@ -198,7 +217,7 @@ Component({
           year: y,
           month: m,
           day: d,
-          week: w,
+          week: w == 0 ? 6 : w - 1,
           dateInfo: dateInfo,
           now
         })
@@ -236,7 +255,7 @@ Component({
                 lunarM: info.lMonth,
                 lunarD: info.lDay,
                 term: info.Term || '',
-                week: info.nWeek === 7 ? 0 : info.nWeek,
+                week: info.nWeek === 7 ? 6 : info.nWeek - 1,
                 prev: true
               })
             }
@@ -264,7 +283,7 @@ Component({
             lunarM: info.lMonth,
             lunarD: info.lDay,
             term: info.Term || '',
-            week: info.nWeek === 7 ? 0 : info.nWeek
+            week: info.nWeek === 7 ? 6 : info.nWeek - 1
           };
           next ? obj.next = true : false;
           // if (month === m && dayStart === d) {
@@ -438,7 +457,7 @@ Component({
           if (lunarFestival[item.lunarM + '-' + item.lunarD]) {
             item.lunarFestival = lunarFestival[item.lunarM + '-' + item.lunarD].festival;
           }
-          infoMap[item.year + '-' + (item.month < 10 ? '0' + item.month : item.month) + '-' + (item.day < 10 ? '0' + item.day : item.day)] = item;
+          infoMap[item.year + '-' + this.doubleStr(item.month) + '-' + this.doubleStr(item.day)] = item;
           if (item.year == data.year && item.month == data.month && item.day == data.day) {
             festivalValue = item.festival || item.lunarFestival || item.term
           }
@@ -525,7 +544,7 @@ Component({
       let today = new Date();
       this.bindDateChange({
         detail: {
-          value: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+          value: today.getFullYear() + '-' + this.doubleStr(today.getMonth() + 1) + '-' + this.doubleStr(today.getDate())
         }
       })
     },
