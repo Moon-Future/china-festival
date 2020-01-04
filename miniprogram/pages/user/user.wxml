@@ -3,8 +3,8 @@
     <image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
     <text class="user-name">{{userInfo.nickName}}</text>
   </view>
-  <navigator wx:if="{{itemShow}}" class="user-item" url="/pages/userFestival/userFestival">
-    <text>我的节日</text>
+  <navigator wx:if="{{itemSelf}}" class="user-item" url="/pages/userFestival/userFestival">
+    <text>私人节日</text>
   </navigator>
   <navigator class="user-item" url="/pages/lunar/lunar">
     <text>农历公历互转</text>

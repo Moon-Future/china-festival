@@ -7,7 +7,7 @@ Page({
    */
   data: {
     userInfo: {},
-    itemShow: false
+    itemSelf: false
   },
 
   /**
@@ -44,11 +44,11 @@ Page({
     }
     wx.cloud.callFunction({
       name: 'getUserInfo',
-      data: { itemShow: true }
+      data: { itemSelf: true }
     }).then(res => {
       if (res.result.status == 1) {
         self.setData({
-          itemShow: true
+          itemSelf: true
         })
       }
     }).catch(err => {

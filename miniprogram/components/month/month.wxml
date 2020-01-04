@@ -22,8 +22,7 @@
       <view class="date-now">
         <text class="data-now-text" bindtap="backToday">{{now ? '今' : '☺'}}</text>
         <text class="iconfont icon-loudou" bindtap="gotoCountdown"></text>
-        <!-- <text class="iconfont icon-memory" bindtap="goadd"></text> -->
-        <button wx:if="{{itemShow}}" open-type="getUserInfo" class="iconfont icon-memory" bindgetuserinfo="goadd"></button>
+        <button wx:if="{{itemSelf}}" open-type="getUserInfo" class="iconfont icon-memory" bindgetuserinfo="goself"></button>
       </view>
     </view>
   </view>

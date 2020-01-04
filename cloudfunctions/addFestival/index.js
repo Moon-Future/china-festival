@@ -21,12 +21,16 @@ exports.main = async (event, context) => {
         message: '删除成功'
       }
     } else {
-      await cloud.openapi.security.msgSecCheck({
-        content: event.festival
-      })
-      await cloud.openapi.security.msgSecCheck({
-        content: event.remark
-      })
+      if (event.festival != '') {
+        await cloud.openapi.security.msgSecCheck({
+          content: event.festival
+        })
+      }
+      if (event.remark != '') {
+        await cloud.openapi.security.msgSecCheck({
+          content: event.remark
+        })
+      }
       const data = {
         festival: event.festival.substr(0, 20),
         year: event.date.split('-')[0],

@@ -8,10 +8,8 @@ const userCollection = db.collection('user')
 // 云函数入口函数
 exports.main = async (event, context) => {
   try {
-    if (event.itemShow) {
-      const result = await userCollection.where({
-        openid: '236338364'
-      }).get()
+    if (event.itemSelf) {
+      const result = await db.collection('self').where({}).get()
       if (result.data.length !== 0) {
         return { status: 1 }
       } else {

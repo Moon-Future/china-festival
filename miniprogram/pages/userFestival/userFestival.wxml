@@ -14,5 +14,8 @@
       <text class="iconfont icon-loudou" data-index="{{index}}" catch:tap="goCountdown"></text>
     </view>
   </view>
-  <button type="primary" size="default" class="addbtn" bindtap="goAdd">添加纪念日</button>
+  <view wx:if="{{selfClicked && colorFlag}}">
+    <selfFestival selfId="{{selfId}}" date="{{date}}" bind:ok="back"></selfFestival>
+  </view>
+  <button wx:if="{{colorFlag}}" type="primary" size="default" class="selfbtn" bindtap="selfFes">添加纪念日</button>
 </view>

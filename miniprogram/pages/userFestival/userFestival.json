@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "selfFestival": "/components/selfFestival/selfFestival"
+  },
   "navigationBarTitleText": "用户"
 }

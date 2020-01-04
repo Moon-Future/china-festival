@@ -38,7 +38,7 @@
   margin: auto 0;
   color: rgba(61, 175, 252, 0.87);
 }
-.addbtn {
+.selfbtn {
   width: 90% !important;
   margin-bottom: 20rpx;
 }

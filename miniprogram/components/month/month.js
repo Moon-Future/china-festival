@@ -38,7 +38,7 @@ Component({
     source: true, // swiper source字段
     prevDays: [],
     nextDays: [],
-    itemShow: false,
+    itemSelf: false,
     holidays: {},
     workdays: {},
     holidayPlan: {},
@@ -55,11 +55,11 @@ Component({
       this.init()
       wx.cloud.callFunction({
         name: 'getUserInfo',
-        data: { itemShow: true }
+        data: { itemSelf: true }
       }).then(res => {
         if (res.result.status == 1) {
           self.setData({
-            itemShow: true
+            itemSelf: true
           })
         }
       }).catch(err => {
@@ -554,7 +554,7 @@ Component({
         url: '/pages/countdown/countdown?year=' + data.year + '&month=' + data.month + '&day=' + data.day
       });
     },
-    goadd(e) {
+    goself(e) {
       let userInfo = e.detail.userInfo
       let data = this.data;
       if (userInfo) {
@@ -565,7 +565,7 @@ Component({
           userInfo.openid = res.result.openid
           app.globalData.userInfo = userInfo
           wx.navigateTo({
-            url: '/pages/addFestival/addFestival?date=' + data.year + '-' + data.month + '-' + data.day
+            url: '/pages/userFestival/userFestival?date=' + data.year + '-' + data.month + '-' + data.day
           });
         }).catch(err => {
 

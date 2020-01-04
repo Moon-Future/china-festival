@@ -8,13 +8,35 @@ Page({
     festivals: [],
     bgDefault: 'default.jpg',
     colorDefault: '#fff',
+    colorFlag: false,
+    selfClicked: false,
+    selfId: '',
+    date: '2020-01-01',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    
+    const self = this
+    if (options.date) {
+      this.setData({
+        date: options.date,
+        selfClicked: true
+      })
+    }
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: { itemSelf: true }
+    }).then(res => {
+      if (res.result.status == 1) {
+        self.setData({
+          colorFlag: true
+        })
+      }
+    }).catch(err => {
+
+    })
   },
 
   /**
@@ -91,9 +113,15 @@ Page({
   updFestival: function(e) {
     let index = e.currentTarget.dataset.index
     let data = this.data.festivals[index]
-    wx.navigateTo({
-      url: '/pages/addFestival/addFestival?id=' + data._id
-    });
+    const self = this
+    this.setData({
+      selfId: data._id,
+    })
+    setTimeout(function() {
+      self.setData({
+        selfClicked: true
+      })
+    }, 100)
   },
 
   goCountdown: function(e) {
@@ -104,9 +132,18 @@ Page({
     });
   },
 
-  goAdd: function() {
-    wx.navigateTo({
-      url: '/pages/addFestival/addFestival',
+  selfFes: function() {
+    this.setData({
+      selfClicked: true
     })
+  },
+
+  back: function() {
+    this.setData({
+      selfClicked: false,
+      selfId: '',
+      date: '2020-01-01'
+    })
+    this.getUserFestival()
   }
 })

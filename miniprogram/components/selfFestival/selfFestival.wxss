@@ -1,10 +1,23 @@
+@import "../../style/iconfont.wxss";
+.selffestival-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5000;
+  overflow: auto;
+  background: #fff;
+}
 .form-item {
   height: 80rpx;
   line-height: 80rpx;
   padding: 0 20rpx;
 }
 .form-title {
+  display: block;
   color: #8785a2;
+  background: #f6f6f6;
 }
 .form-inp {
   background: #fff;
