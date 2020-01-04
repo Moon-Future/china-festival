@@ -29,7 +29,9 @@ exports.main = async (event, context) => {
     }
   } else {
     if (event.all) { // 获取全部节日 缓存到前端
-      const result = await festivalCollection.where({}).get()
+      const result = await festivalCollection.where({
+        user: _.eq(null)
+      }).get()
       return {
         festivals: result.data
       }
